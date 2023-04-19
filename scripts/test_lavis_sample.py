@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import requests
 import torch
 from lavis.models import load_model_and_preprocess
