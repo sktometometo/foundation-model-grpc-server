@@ -1,0 +1,3 @@
+grpcio-tools
+salesforce-lavis
+opencv-python
