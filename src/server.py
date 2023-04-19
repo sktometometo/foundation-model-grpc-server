@@ -2,10 +2,13 @@ import torch
 from PIL import Image
 from lavis.models import load_model_and_preprocess
 
+from lavis_server_pb2_grpc import LAVISServerServicer
+from lavis_server_pb2 import ImageCaptioningResponse
+
 import cv2
 
 
-class ContinuousServer:
+class LAVISServer(LAVISServerServicer):
 
     def __init__(self):
 
@@ -14,7 +17,13 @@ class ContinuousServer:
             name="blip2_opt", model_type="pretrain_opt2.7b", is_eval=True, device=self.device
         )
 
-    def inference(self, image):
+    def ImageCaptioning(self, request, context):
+        print('type of request: {}, request: {}'.format(type(request), request))
+        print('type of context: {}, context: {}'.format(type(context), context))
+        response = ImageCaptioningResponse()
+        return response
+
+    def _inference(self, image: Image):
 
         raw_image = Image.fromarray(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
         image = self.vis_processors["eval"](raw_image).unsqueeze(0).to(self.device)
