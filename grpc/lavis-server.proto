@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+message Image {
+    uint32 width = 1;
+    uint32 height = 2;
+    bytes image_data = 3;
+}
+
+message ImageCaptioningRequest {
+    Image image = 1;
+}
+
+message ImageCaptioningResponse {
+    string caption = 1;
+}
+
+message TextLocalizationRequest {
+    Image image = 1;
+    string text = 2;
+}
+
+message TextLocalizationResponse {
+    Image heatmap = 1;
+}
+
+service LAVISServer {
+    rpc ImageCaptioning(ImageCaptioningRequest) returns (ImageCaptioningResponse) {}
+    rpc TextLocalization(TextLocalizationRequest) returns (TextLocalizationResponse) {}
+}
