@@ -30,16 +30,16 @@ class LAVISServer(LAVISServerServicer):
       cv2.destroyAllWindows()
 
   def ImageCaptioning(self, request, context):
-    cv_array = image_proto_to_cv_array(request.image)
+    cv_array_rgb = image_proto_to_cv_array(request.image)
+    cv_array_bgr = cv2.cvtColor(cv_array_rgb, cv2.COLOR_RGB2BGR)
     if self.use_gui:
-      cv2.imshow("LAVISServer", cv_array)
+      cv2.imshow("LAVISServer", cv_array_bgr)
       cv2.waitKey(1)
-    original_size = cv_array.shape[:2]
-    raw_image = Image.fromarray(
-        cv2.cvtColor(cv2.resize(cv_array, self.dst_size), cv2.COLOR_BGR2RGB))
+    original_size = cv_array_rgb.shape[:2]
+    raw_image = Image.fromarray(cv2.resize(cv_array_rgb, self.dst_size))
     image = self.vis_processors["eval"](raw_image).unsqueeze(0).to(self.device)
     result = self.model.generate({"image": image})
     response = ImageCaptioningResponse(caption=result[0])
-    logger.info("Get image with {} size".format(cv_array.shape))
+    logger.info("Get image with {} size".format(cv_array_rgb.shape))
     logger.info("Generate caption: {}".format(response))
     return response

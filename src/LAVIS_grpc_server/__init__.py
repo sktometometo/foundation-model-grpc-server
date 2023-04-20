@@ -44,7 +44,7 @@ def main_client_sample():
       cv2.imshow('LAVISClient', frame)
       if cv2.waitKey(1) != -1:
         break
-      image = cv_array_to_image_proto(frame)
+      image = cv_array_to_image_proto(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
       request.image.CopyFrom(image)
       result = stub.ImageCaptioning(request)
       logger.info('caption: {}'.format(result.caption))
