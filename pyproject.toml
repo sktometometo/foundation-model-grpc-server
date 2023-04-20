@@ -14,6 +14,15 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+[project.scripts]
+download_model_cache = "LAVIS_grpc_server:download_model_cache"
+run_lavis_server = "LAVIS_grpc_server:main_server"
+sample_lavis_client = "LAVIS_grpc_server:main_client_sample"
 
 [project.urls]
 "Homepage" = "https://github.com/sktometometo/LAVIS-grpc-server"
