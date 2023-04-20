@@ -21,6 +21,7 @@ class Node:
     self.channel = grpc.insecure_channel('localhost:50051')
     self.stub = lavis_server_pb2_grpc.LAVISServerStub(self.channel)
     self.cv_bridge = CvBridge()
+    rospy.loginfo('Initialized.')
 
   def __del__(self):
 
@@ -29,7 +30,6 @@ class Node:
   def handler(self, req):
 
     rospy.loginfo('image.encoding: {}'.format(req.image.encoding))
-
     grpc_request = lavis_server_pb2.ImageCaptioningRequest()
     grpc_request.image.CopyFrom(
         cv_array_to_image_proto(self.cv_bridge.imgmsg_to_cv2(req.image)))
@@ -42,6 +42,6 @@ class Node:
 if __name__ == '__main__':
 
   logging.basicConfig(level=logging.INFO)
-  rospy.init_node('lavis_grpc_server')
+  rospy.init_node('lavis_grpc_bridge_server')
   node = Node()
   rospy.spin()

@@ -31,10 +31,8 @@ catkin_package(
 )
 
 catkin_install_python(PROGRAMS
-    scripts/sample_lavis_client.py
-    scripts/download_model_cache.py
-    scripts/run_lavis_server.py
     scripts/rosbridge_server.py
+    scripts/sample_query_node.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
