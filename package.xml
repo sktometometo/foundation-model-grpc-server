@@ -5,7 +5,7 @@
         This package provides foo capability.
     </description>
     <maintainer email="sktometometo@gmail.com">Koki Shinjo</maintainer>
-    <license>BSD</license>
+    <license>MIT</license>
 
     <buildtool_depend>catkin</buildtool_depend>
 
