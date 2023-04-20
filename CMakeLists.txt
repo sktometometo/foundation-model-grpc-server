@@ -15,7 +15,7 @@ catkin_generate_virtualenv(
 catkin_package(
 )
 
-catkin_install_python(PROGRAMS scripts/sample_lavis_client.py
+catkin_install_python(PROGRAMS scripts/sample_lavis_client.py scripts/download_model_cache.py scripts/run_lavis_server.py
 DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
