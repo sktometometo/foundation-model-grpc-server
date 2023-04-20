@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+import argparse
+
 import cv2
 import torch
 from lavis.models import load_model_and_preprocess
@@ -22,25 +23,26 @@ class ContinuousProcess:
     self.cap.release()
     cv2.destroyAllWindows()
 
-  def loop(self):
+  def loop(self, prompt: str):
 
     while True:
       ret, frame = self.cap.read()
       raw_image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
       image = self.vis_processors["eval"](raw_image).unsqueeze(0).to(
           self.device)
-      #result = self.model.generate({"image": image})
-      result = self.model.generate({
-          "image": image,
-          "prompt": "Question: how many people are there? Answer:"
-      })
+      result = self.model.generate({"image": image, "prompt": prompt})
       print(result)
       cv2.imshow("test", frame)
       if cv2.waitKey(1) != -1:
         break
 
 
-if __name__ == '__main__':
+def main():
+
+  parser = argparse.ArgumentParser()
+  parser.add_argument('--prompt', type=str, default='')
+
+  args = parser.parse_args()
 
   p = ContinuousProcess()
-  p.loop()
+  p.loop(prompt=args.prompt)
