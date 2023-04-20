@@ -1,0 +1,16 @@
+<launch>
+    <node pkg="usb_cam" type="usb_cam_node" name="usb_cam">
+        <rosparam>
+            pixel_format: yuyv
+        </rosparam>
+    </node>
+
+    <node pkg="LAVIS_grpc_server" type="rosbridge_server.py" name="LAVIS_grpc_bridge_server"
+        output="screen">
+    </node>
+
+    <node pkg="LAVIS_grpc_server" type="sample_query_node.py" name="sample_query_node">
+        <remap from="~image" to="/usb_cam/image_raw"/>
+        <remap from="~image_captioning" to="/LAVIS_grpc_bridge_server/image_captioning"/>
+    </node>
+</launch>

@@ -2,7 +2,9 @@
 
 This is a python package provides grpc server for [LAVIS](https://github.com/salesforce/LAVIS).
 
-## Install
+## Bare python module
+
+### Install
 
 ```bash
 pip install -e .
@@ -10,7 +12,7 @@ pip install -e .
 
 You may have to install extra packages so that python modules can work.
 
-## RUN
+### RUN
 
 To run the server
 
@@ -24,7 +26,7 @@ You can check a client demo
 sample_lavis_client
 ```
 
-## Docker image
+### Docker image
 
 There is a docker image for server
 
@@ -36,4 +38,20 @@ and run the server.
 
 ```bash
 docker run -p 50051:50051 --gpus all sktometometo/lavis-grpc-server
+```
+
+## ROS Package
+
+### Install
+
+```bash
+catkin build LAVIS_grpc_server
+```
+
+### How to use demo
+
+After launch a server.
+
+```bash
+roslaunch LAVIS_grpc_server demo.launch
 ```
