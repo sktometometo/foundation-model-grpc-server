@@ -12,6 +12,7 @@ catkin_python_setup()
 
 catkin_generate_virtualenv(
     PYTHON_INTERPRETER python3.8
+    USE_SYSTEM_PACKAGES FALSE
     CHECK_VENV FALSE
 )
 
