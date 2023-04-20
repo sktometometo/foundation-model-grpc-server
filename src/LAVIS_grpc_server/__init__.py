@@ -47,6 +47,6 @@ def main_client_sample():
       image = cv_array_to_image_proto(frame)
       request.image.CopyFrom(image)
       result = stub.ImageCaptioning(request)
-      logger.info('result: {}'.format(result))
+      logger.info('caption: {}'.format(result.caption))
   cv2.destroyAllWindows()
   logger.info('Finished')

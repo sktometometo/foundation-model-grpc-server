@@ -40,4 +40,6 @@ class LAVISServer(LAVISServerServicer):
     image = self.vis_processors["eval"](raw_image).unsqueeze(0).to(self.device)
     result = self.model.generate({"image": image})
     response = ImageCaptioningResponse(caption=result[0])
+    logger.info("Get image with {} size".format(cv_array.shape))
+    logger.info("Generate caption: {}".format(response))
     return response

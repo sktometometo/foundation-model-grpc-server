@@ -8,6 +8,6 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 COPY . /workspace/LAVIS-grpc-server
 RUN pip install --no-cache-dir -e /workspace/LAVIS-grpc-server/
-RUN ["/workspace/LAVIS-grpc-server/scripts/download_model_cache.py"]
+RUN ["download_model_cache"]
 
-CMD ["/workspace/LAVIS-grpc-server/scripts/run_lavis_server.py"]
+CMD ["run_lavis_server"]
