@@ -2,4 +2,4 @@
 
 from LAVIS_grpc_server import main_server
 
-main_server()
+main_server(use_gui=True)

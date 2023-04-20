@@ -23,10 +23,10 @@ def download_model_cache():
       device=device)
 
 
-def main_server():
+def main_server(use_gui: bool = False):
   logging.basicConfig(level=logging.INFO)
   server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-  add_LAVISServerServicer_to_server(LAVISServer(), server)
+  add_LAVISServerServicer_to_server(LAVISServer(use_gui), server)
   server.add_insecure_port('[::]:50051')
   server.start()
   server.wait_for_termination()

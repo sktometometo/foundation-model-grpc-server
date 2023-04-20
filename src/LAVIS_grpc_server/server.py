@@ -14,8 +14,9 @@ logger = logging.getLogger(__name__)
 
 class LAVISServer(LAVISServerServicer):
 
-  def __init__(self):
+  def __init__(self, use_gui: bool):
     self.dst_size = (300, 300)
+    self.use_gui = use_gui
     self.device = torch.device("cuda") if torch.cuda.is_available() else "cpu"
     self.model, self.vis_processors, _ = load_model_and_preprocess(
         name="blip2_opt",
@@ -25,12 +26,14 @@ class LAVISServer(LAVISServerServicer):
     logger.info('Initialized')
 
   def __del__(self):
-    cv2.destroyAllWindows()
+    if self.use_gui:
+      cv2.destroyAllWindows()
 
   def ImageCaptioning(self, request, context):
     cv_array = image_proto_to_cv_array(request.image)
-    cv2.imshow("LAVISServer", cv_array)
-    cv2.waitKey(1)
+    if self.use_gui:
+      cv2.imshow("LAVISServer", cv_array)
+      cv2.waitKey(1)
     original_size = cv_array.shape[:2]
     raw_image = Image.fromarray(
         cv2.cvtColor(cv2.resize(cv_array, self.dst_size), cv2.COLOR_BGR2RGB))
