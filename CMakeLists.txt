@@ -13,7 +13,6 @@ catkin_generate_virtualenv(
 )
 
 catkin_package(
-  CATKIN_DEPENDS catkin_virtualenv
 )
 
 catkin_install_python(PROGRAMS scripts/sample_lavis_client.py
