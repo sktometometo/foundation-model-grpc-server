@@ -3,6 +3,9 @@ project(LAVIS_grpc_server)
 
 find_package(catkin REQUIRED COMPONENTS
   catkin_virtualenv
+  message_generation
+  sensor_msgs
+  rospy
 )
 
 catkin_python_setup()
@@ -12,7 +15,18 @@ catkin_generate_virtualenv(
     CHECK_VENV FALSE
 )
 
+add_service_files(
+  FILES
+  ImageCaptioning.srv
+)
+
+generate_messages(
+  DEPENDENCIES
+  sensor_msgs
+)
+
 catkin_package(
+  CATKIN_DEPENDS message_runtime
 )
 
 catkin_install_python(PROGRAMS scripts/sample_lavis_client.py scripts/download_model_cache.py scripts/run_lavis_server.py
