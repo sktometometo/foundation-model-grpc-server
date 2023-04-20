@@ -29,8 +29,12 @@ catkin_package(
   CATKIN_DEPENDS message_runtime
 )
 
-catkin_install_python(PROGRAMS scripts/sample_lavis_client.py scripts/download_model_cache.py scripts/run_lavis_server.py
-DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+catkin_install_python(PROGRAMS
+    scripts/sample_lavis_client.py
+    scripts/download_model_cache.py
+    scripts/run_lavis_server.py
+    scripts/rosbridge_server.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 install(FILES requirements.txt

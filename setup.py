@@ -27,7 +27,7 @@ package_info = {
         'gui_scripts': [
             "run_lavis_server = LAVIS_grpc_server:main_server",
             "sample_lavis_client = LAVIS_grpc_server:main_client_sample",
-            "sample_continuous_captioning = LAVIS_grpc_server:continuous_captioning:main"
+            "sample_continuous_captioning = LAVIS_grpc_server.continuous_captioning:main"
         ]
     },
     "classifiers": [
