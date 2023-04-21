@@ -13,4 +13,6 @@
         <remap from="~image" to="/usb_cam/image_raw"/>
         <remap from="~image_captioning" to="/LAVIS_grpc_bridge_server/image_captioning"/>
     </node>
+
+    <include file="$(find sound_play)/soundplay_node.launch"/>
 </launch>
