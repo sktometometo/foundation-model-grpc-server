@@ -28,8 +28,8 @@ class LAVISServerStub(object):
         response_deserializer=lavis__server__pb2.TextLocalizationResponse.
         FromString,
     )
-    self.InstructedGeneratio = channel.unary_unary(
-        '/LAVISServer/InstructedGeneratio',
+    self.InstructedGeneration = channel.unary_unary(
+        '/LAVISServer/InstructedGeneration',
         request_serializer=lavis__server__pb2.InstructedGenerationRequest.
         SerializeToString,
         response_deserializer=lavis__server__pb2.InstructedGenerationResponse.
@@ -52,7 +52,7 @@ class LAVISServerServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def InstructedGeneratio(self, request, context):
+  def InstructedGeneration(self, request, context):
     """Missing associated documentation comment in .proto file."""
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
@@ -77,9 +77,9 @@ def add_LAVISServerServicer_to_server(servicer, server):
               response_serializer=lavis__server__pb2.TextLocalizationResponse.
               SerializeToString,
           ),
-      'InstructedGeneratio':
+      'InstructedGeneration':
           grpc.unary_unary_rpc_method_handler(
-              servicer.InstructedGeneratio,
+              servicer.InstructedGeneration,
               request_deserializer=lavis__server__pb2.
               InstructedGenerationRequest.FromString,
               response_serializer=lavis__server__pb2.
@@ -132,18 +132,18 @@ class LAVISServer(object):
         wait_for_ready, timeout, metadata)
 
   @staticmethod
-  def InstructedGeneratio(request,
-                          target,
-                          options=(),
-                          channel_credentials=None,
-                          call_credentials=None,
-                          insecure=False,
-                          compression=None,
-                          wait_for_ready=None,
-                          timeout=None,
-                          metadata=None):
+  def InstructedGeneration(request,
+                           target,
+                           options=(),
+                           channel_credentials=None,
+                           call_credentials=None,
+                           insecure=False,
+                           compression=None,
+                           wait_for_ready=None,
+                           timeout=None,
+                           metadata=None):
     return grpc.experimental.unary_unary(
-        request, target, '/LAVISServer/InstructedGeneratio',
+        request, target, '/LAVISServer/InstructedGeneration',
         lavis__server__pb2.InstructedGenerationRequest.SerializeToString,
         lavis__server__pb2.InstructedGenerationResponse.FromString, options,
         channel_credentials, insecure, call_credentials, compression,
