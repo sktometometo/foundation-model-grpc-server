@@ -26,12 +26,12 @@ class Node:
 
   def handler(self, req):
 
-    rospy.loginfo('image.encoding: {}'.format(req.image.encoding))
+    rospy.logdebug('image.encoding: {}'.format(req.image.encoding))
     cv_array_rgb = np.frombuffer(req.image.data, dtype=np.uint8).reshape(
         req.image.height, req.image.width, -1)
     grpc_request = lavis_server_pb2.ImageCaptioningRequest()
     grpc_request.image.CopyFrom(cv_array_to_image_proto(cv_array_rgb))
-    result = self.stub.ImageCaptioning(grpc_request)
+    result = self.stub.ImageCaptioning(grpc_request, wait_for_ready=True)
     response = ImageCaptioningResponse()
     response.caption = result.caption
     return response

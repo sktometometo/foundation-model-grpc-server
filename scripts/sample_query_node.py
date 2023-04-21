@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
 import logging
+
 import rospy
-from LAVIS_grpc_server.srv import ImageCaptioning, ImageCaptioningRequest
 from sensor_msgs.msg import Image
+
+from LAVIS_grpc_server.srv import ImageCaptioning, ImageCaptioningRequest
 
 
 class SampleQueryNode:
