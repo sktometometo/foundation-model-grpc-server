@@ -10,7 +10,8 @@ from PIL import Image
 
 from LAVIS_grpc_server.lavis_server_pb2 import (ImageCaptioningResponse,
                                                 InstructedGenerationResponse,
-                                                TextLocalizationResponse)
+                                                TextLocalizationResponse,
+                                                VisualQuestionAnsweringResponse)
 from LAVIS_grpc_server.lavis_server_pb2_grpc import LAVISServerServicer
 from LAVIS_grpc_server.utils import (cv_array_to_image_proto,
                                      image_proto_to_cv_array)
@@ -84,5 +85,21 @@ class LAVISServer(LAVISServerServicer):
       avg_gradcam = getAttMap(np.float32(raw_image), gradcam[0][1], blur=True)
       cv2.imshow("LAVISServer Text Localization",
                  cv2.cvtColor(avg_gradcam, cv2.COLOR_RGB2BGR))
+      cv2.waitKey(1)
+    return response
+
+  def VisualQuestionAnswering(self, request, context):
+    cv_array_rgb = image_proto_to_cv_array(request.image)
+    cv_array_bgr = cv2.cvtColor(cv_array_rgb, cv2.COLOR_RGB2BGR)
+    raw_image = Image.fromarray(cv2.resize(cv_array_rgb, self.dst_size))
+    image = self.vis_processors["eval"](raw_image).unsqueeze(0).to(self.device)
+    result = self.model.predict_answers(samples={
+        "image": image,
+        "text_input": request.question
+    },
+                                        inference_method='generate')
+    response = VisualQuestionAnsweringResponse(answer=result[0])
+    if self.use_gui:
+      cv2.imshow("LAVISServer Visual Question Answering", cv_array_bgr)
       cv2.waitKey(1)
     return response
