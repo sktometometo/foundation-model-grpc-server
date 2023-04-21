@@ -45,6 +45,7 @@ docker run -p 50051:50051 --gpus all sktometometo/lavis-grpc-server
 ### Install
 
 ```bash
+rosdep install --from-paths . --ignore-src -y -r
 catkin build LAVIS_grpc_server
 ```
 
