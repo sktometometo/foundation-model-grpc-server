@@ -18,6 +18,13 @@ message TextLocalizationRequest {
 
 message TextLocalizationResponse { Image heatmap = 1; }
 
+message VisualQuestionAnsweringRequest {
+  Image image = 1;
+  string question = 2;
+}
+
+message VisualQuestionAnsweringResponse { string answer = 1; }
+
 message InstructedGenerationRequest {
   Image image = 1;
   string prompt = 2;
@@ -32,4 +39,6 @@ service LAVISServer {
       returns (TextLocalizationResponse) {}
   rpc InstructedGeneration(InstructedGenerationRequest)
       returns (InstructedGenerationResponse) {}
+  rpc VisualQuestionAnswering(VisualQuestionAnsweringRequest)
+      returns (VisualQuestionAnsweringResponse) {}
 }

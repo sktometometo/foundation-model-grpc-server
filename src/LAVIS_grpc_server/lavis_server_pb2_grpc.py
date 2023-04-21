@@ -35,6 +35,13 @@ class LAVISServerStub(object):
         response_deserializer=lavis__server__pb2.InstructedGenerationResponse.
         FromString,
     )
+    self.VisualQuestionAnswering = channel.unary_unary(
+        '/LAVISServer/VisualQuestionAnswering',
+        request_serializer=lavis__server__pb2.VisualQuestionAnsweringRequest.
+        SerializeToString,
+        response_deserializer=lavis__server__pb2.
+        VisualQuestionAnsweringResponse.FromString,
+    )
 
 
 class LAVISServerServicer(object):
@@ -53,6 +60,12 @@ class LAVISServerServicer(object):
     raise NotImplementedError('Method not implemented!')
 
   def InstructedGeneration(self, request, context):
+    """Missing associated documentation comment in .proto file."""
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def VisualQuestionAnswering(self, request, context):
     """Missing associated documentation comment in .proto file."""
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
@@ -84,6 +97,14 @@ def add_LAVISServerServicer_to_server(servicer, server):
               InstructedGenerationRequest.FromString,
               response_serializer=lavis__server__pb2.
               InstructedGenerationResponse.SerializeToString,
+          ),
+      'VisualQuestionAnswering':
+          grpc.unary_unary_rpc_method_handler(
+              servicer.VisualQuestionAnswering,
+              request_deserializer=lavis__server__pb2.
+              VisualQuestionAnsweringRequest.FromString,
+              response_serializer=lavis__server__pb2.
+              VisualQuestionAnsweringResponse.SerializeToString,
           ),
   }
   generic_handler = grpc.method_handlers_generic_handler(
@@ -146,5 +167,23 @@ class LAVISServer(object):
         request, target, '/LAVISServer/InstructedGeneration',
         lavis__server__pb2.InstructedGenerationRequest.SerializeToString,
         lavis__server__pb2.InstructedGenerationResponse.FromString, options,
+        channel_credentials, insecure, call_credentials, compression,
+        wait_for_ready, timeout, metadata)
+
+  @staticmethod
+  def VisualQuestionAnswering(request,
+                              target,
+                              options=(),
+                              channel_credentials=None,
+                              call_credentials=None,
+                              insecure=False,
+                              compression=None,
+                              wait_for_ready=None,
+                              timeout=None,
+                              metadata=None):
+    return grpc.experimental.unary_unary(
+        request, target, '/LAVISServer/VisualQuestionAnswering',
+        lavis__server__pb2.VisualQuestionAnsweringRequest.SerializeToString,
+        lavis__server__pb2.VisualQuestionAnsweringResponse.FromString, options,
         channel_credentials, insecure, call_credentials, compression,
         wait_for_ready, timeout, metadata)

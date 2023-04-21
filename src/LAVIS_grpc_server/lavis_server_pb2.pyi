@@ -55,3 +55,17 @@ class TextLocalizationResponse(_message.Message):
     HEATMAP_FIELD_NUMBER: _ClassVar[int]
     heatmap: Image
     def __init__(self, heatmap: _Optional[_Union[Image, _Mapping]] = ...) -> None: ...
+
+class VisualQuestionAnsweringRequest(_message.Message):
+    __slots__ = ["image", "question"]
+    IMAGE_FIELD_NUMBER: _ClassVar[int]
+    QUESTION_FIELD_NUMBER: _ClassVar[int]
+    image: Image
+    question: str
+    def __init__(self, image: _Optional[_Union[Image, _Mapping]] = ..., question: _Optional[str] = ...) -> None: ...
+
+class VisualQuestionAnsweringResponse(_message.Message):
+    __slots__ = ["answer"]
+    ANSWER_FIELD_NUMBER: _ClassVar[int]
+    answer: str
+    def __init__(self, answer: _Optional[str] = ...) -> None: ...
