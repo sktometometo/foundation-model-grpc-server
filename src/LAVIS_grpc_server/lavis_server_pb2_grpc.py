@@ -2,110 +2,98 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from . import lavis_server_pb2 as lavis__server__pb2
+import lavis_server_pb2 as lavis__server__pb2
 
 
 class LAVISServerStub(object):
-  """Missing associated documentation comment in .proto file."""
+    """Missing associated documentation comment in .proto file."""
 
-  def __init__(self, channel):
-    """Constructor.
+    def __init__(self, channel):
+        """Constructor.
 
         Args:
             channel: A grpc.Channel.
         """
-    self.ImageCaptioning = channel.unary_unary(
-        '/LAVISServer/ImageCaptioning',
-        request_serializer=lavis__server__pb2.ImageCaptioningRequest.
-        SerializeToString,
-        response_deserializer=lavis__server__pb2.ImageCaptioningResponse.
-        FromString,
-    )
-    self.TextLocalization = channel.unary_unary(
-        '/LAVISServer/TextLocalization',
-        request_serializer=lavis__server__pb2.TextLocalizationRequest.
-        SerializeToString,
-        response_deserializer=lavis__server__pb2.TextLocalizationResponse.
-        FromString,
-    )
+        self.ImageCaptioning = channel.unary_unary(
+                '/LAVISServer/ImageCaptioning',
+                request_serializer=lavis__server__pb2.ImageCaptioningRequest.SerializeToString,
+                response_deserializer=lavis__server__pb2.ImageCaptioningResponse.FromString,
+                )
+        self.TextLocalization = channel.unary_unary(
+                '/LAVISServer/TextLocalization',
+                request_serializer=lavis__server__pb2.TextLocalizationRequest.SerializeToString,
+                response_deserializer=lavis__server__pb2.TextLocalizationResponse.FromString,
+                )
 
 
 class LAVISServerServicer(object):
-  """Missing associated documentation comment in .proto file."""
-
-  def ImageCaptioning(self, request, context):
     """Missing associated documentation comment in .proto file."""
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
 
-  def TextLocalization(self, request, context):
-    """Missing associated documentation comment in .proto file."""
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
+    def ImageCaptioning(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def TextLocalization(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
 
 
 def add_LAVISServerServicer_to_server(servicer, server):
-  rpc_method_handlers = {
-      'ImageCaptioning':
-          grpc.unary_unary_rpc_method_handler(
-              servicer.ImageCaptioning,
-              request_deserializer=lavis__server__pb2.ImageCaptioningRequest.
-              FromString,
-              response_serializer=lavis__server__pb2.ImageCaptioningResponse.
-              SerializeToString,
-          ),
-      'TextLocalization':
-          grpc.unary_unary_rpc_method_handler(
-              servicer.TextLocalization,
-              request_deserializer=lavis__server__pb2.TextLocalizationRequest.
-              FromString,
-              response_serializer=lavis__server__pb2.TextLocalizationResponse.
-              SerializeToString,
-          ),
-  }
-  generic_handler = grpc.method_handlers_generic_handler(
-      'LAVISServer', rpc_method_handlers)
-  server.add_generic_rpc_handlers((generic_handler,))
+    rpc_method_handlers = {
+            'ImageCaptioning': grpc.unary_unary_rpc_method_handler(
+                    servicer.ImageCaptioning,
+                    request_deserializer=lavis__server__pb2.ImageCaptioningRequest.FromString,
+                    response_serializer=lavis__server__pb2.ImageCaptioningResponse.SerializeToString,
+            ),
+            'TextLocalization': grpc.unary_unary_rpc_method_handler(
+                    servicer.TextLocalization,
+                    request_deserializer=lavis__server__pb2.TextLocalizationRequest.FromString,
+                    response_serializer=lavis__server__pb2.TextLocalizationResponse.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'LAVISServer', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
 
 
-# This class is part of an EXPERIMENTAL API.
+ # This class is part of an EXPERIMENTAL API.
 class LAVISServer(object):
-  """Missing associated documentation comment in .proto file."""
+    """Missing associated documentation comment in .proto file."""
 
-  @staticmethod
-  def ImageCaptioning(request,
-                      target,
-                      options=(),
-                      channel_credentials=None,
-                      call_credentials=None,
-                      insecure=False,
-                      compression=None,
-                      wait_for_ready=None,
-                      timeout=None,
-                      metadata=None):
-    return grpc.experimental.unary_unary(
-        request, target, '/LAVISServer/ImageCaptioning',
-        lavis__server__pb2.ImageCaptioningRequest.SerializeToString,
-        lavis__server__pb2.ImageCaptioningResponse.FromString, options,
-        channel_credentials, insecure, call_credentials, compression,
-        wait_for_ready, timeout, metadata)
+    @staticmethod
+    def ImageCaptioning(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/LAVISServer/ImageCaptioning',
+            lavis__server__pb2.ImageCaptioningRequest.SerializeToString,
+            lavis__server__pb2.ImageCaptioningResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
-  @staticmethod
-  def TextLocalization(request,
-                       target,
-                       options=(),
-                       channel_credentials=None,
-                       call_credentials=None,
-                       insecure=False,
-                       compression=None,
-                       wait_for_ready=None,
-                       timeout=None,
-                       metadata=None):
-    return grpc.experimental.unary_unary(
-        request, target, '/LAVISServer/TextLocalization',
-        lavis__server__pb2.TextLocalizationRequest.SerializeToString,
-        lavis__server__pb2.TextLocalizationResponse.FromString, options,
-        channel_credentials, insecure, call_credentials, compression,
-        wait_for_ready, timeout, metadata)
+    @staticmethod
+    def TextLocalization(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/LAVISServer/TextLocalization',
+            lavis__server__pb2.TextLocalizationRequest.SerializeToString,
+            lavis__server__pb2.TextLocalizationResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

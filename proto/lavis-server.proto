@@ -3,7 +3,8 @@ syntax = "proto3";
 message Image {
   uint32 width = 1;
   uint32 height = 2;
-  bytes image_data = 3;
+  uint32 encoding = 3;
+  bytes image_data = 4;
 }
 
 message ImageCaptioningRequest { Image image = 1; }
@@ -16,6 +17,13 @@ message TextLocalizationRequest {
 }
 
 message TextLocalizationResponse { Image heatmap = 1; }
+
+message InstructedGenerationRequest {
+  Image image = 1;
+  string prompt = 2;
+}
+
+message InstructedGenerationResponse { string response = 1; }
 
 service LAVISServer {
   rpc ImageCaptioning(ImageCaptioningRequest)
