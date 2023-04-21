@@ -30,4 +30,6 @@ service LAVISServer {
       returns (ImageCaptioningResponse) {}
   rpc TextLocalization(TextLocalizationRequest)
       returns (TextLocalizationResponse) {}
+  rpc InstructedGeneratio(InstructedGenerationRequest)
+      returns (InstructedGenerationResponse) {}
 }
