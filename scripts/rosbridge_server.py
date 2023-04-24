@@ -15,8 +15,11 @@ class Node:
 
   def __init__(self):
 
+    hostname = rospy.get_param('~grpc_hostname', 'localhost')
+    port = rospy.get_param('~grpc_port', '50051')
+
     self.srv = rospy.Service('~image_captioning', ImageCaptioning, self.handler)
-    self.channel = grpc.insecure_channel('localhost:50051')
+    self.channel = grpc.insecure_channel('{}:{}'.format(hostname, port))
     self.stub = lavis_server_pb2_grpc.LAVISServerStub(self.channel)
     rospy.loginfo('Initialized.')
 
