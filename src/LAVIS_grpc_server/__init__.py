@@ -114,7 +114,7 @@ def main_client_sample():
         request.image.CopyFrom(image)
         request.text = args.input_text
         result = stub.TextLocalization(request, wait_for_ready=True)
-        attention_map = image_proto_to_cv_array(result.heat_map)
+        attention_map = image_proto_to_cv_array(result.heatmap)
         logger.info('Attention_map: {}'.format(attention_map))
       elif args.task == 'vqa':
         request = lavis_server_pb2.VisualQuestionAnsweringRequest()

@@ -41,7 +41,11 @@ def cv_array_to_image_proto(cv_array: np.ndarray) -> lavis_server_pb2.Image:
     image (lavis_server_pb2.Image): Image Proto
   """
   dtype = cv_array.dtype
-  height, width, channels = cv_array.shape[:3]
+  if len(cv_array.shape) == 3:
+    height, width, channels = cv_array.shape[:3]
+  else:
+    height, width = cv_array.shape
+    channels = 1
   image = lavis_server_pb2.Image()
   image.width = width
   image.height = height

@@ -41,14 +41,15 @@ class LAVISServer(LAVISServerServicer):
 
   def ImageCaptioning(self, request, context):
     cv_array_rgb = image_proto_to_cv_array(request.image)
-    cv_array_bgr = cv2.cvtColor(cv_array_rgb, cv2.COLOR_RGB2BGR)
-    raw_image = Image.fromarray(cv2.resize(cv_array_rgb, self.dst_size))
+    cv_array_rgb = cv2.resize(cv_array_rgb, self.dst_size)
+    raw_image = Image.fromarray(cv_array_rgb)
     image = self.vis_processors["eval"](raw_image).unsqueeze(0).to(self.device)
     result = self.model.generate({"image": image})
     response = ImageCaptioningResponse(caption=result[0])
-    logger.info("Get image with {} size".format(cv_array_rgb.shape))
     logger.info("Generate caption: {}".format(response))
     if self.use_gui:
+      cv_array_bgr = cv2.cvtColor(image_proto_to_cv_array(request.image),
+                                  cv2.COLOR_RGB2BGR)
       cv2.imshow("LAVISBLIP2Server Image Captioning", cv_array_bgr)
       cv2.waitKey(1)
     return response
@@ -56,8 +57,8 @@ class LAVISServer(LAVISServerServicer):
   def InstructedGeneration(self, request, context):
     cv_array_rgb = image_proto_to_cv_array(request.image)
     prompt = request.prompt
-    cv_array_bgr = cv2.cvtColor(cv_array_rgb, cv2.COLOR_RGB2BGR)
-    raw_image = Image.fromarray(cv2.resize(cv_array_rgb, self.dst_size))
+    cv_array_rgb = cv2.resize(cv_array_rgb, self.dst_size)
+    raw_image = Image.fromarray(cv_array_rgb)
     image = self.vis_processors["eval"](raw_image).unsqueeze(0).to(self.device)
     result = self.model.generate({'image': image, 'prompt': prompt})
     response = InstructedGenerationResponse(response=result[0])
@@ -65,33 +66,37 @@ class LAVISServer(LAVISServerServicer):
         cv_array_rgb.shape, prompt))
     logger.info("Generate caption: {}".format(response))
     if self.use_gui:
+      cv_array_bgr = cv2.cvtColor(image_proto_to_cv_array(request.image),
+                                  cv2.COLOR_RGB2BGR)
       cv2.imshow("LAVISServer Instructed Generation", cv_array_bgr)
       cv2.waitKey(1)
     return response
 
   def TextLocalization(self, request, context):
     cv_array_rgb = image_proto_to_cv_array(request.image)
-    raw_image = Image.fromarray(cv2.resize(cv_array_rgb, self.dst_size))
-    img = self.vis_processors['eval'](raw_image)
+    #cv_array_rgb = cv2.resize(cv_array_rgb, self.dst_size)
+    raw_image = Image.fromarray(cv_array_rgb)
+    img = self.vis_processors['eval'](raw_image).unsqueeze(0).to(self.device)
     txt = self.text_processors["eval"](request.text)
     txt_tokens = self.model.tokenizer(txt, return_tensors="pt").to(self.device)
     gradcam, _ = compute_gradcam(self.model, img, txt, txt_tokens, block_num=7)
     whole_gradcam = gradcam[0][1]
-    logger.info('whole_graphcam dtype: {}, shape: {}'.format(
-        whole_gradcam.dtype, whole_gradcam.shape))
     response = TextLocalizationResponse()
-    response.heatmap.CopyFrom(cv_array_to_image_proto(whole_gradcam))
+    response.heatmap.CopyFrom(cv_array_to_image_proto(
+        np.float32(whole_gradcam)))
     if self.use_gui:
-      avg_gradcam = getAttMap(np.float32(raw_image), gradcam[0][1], blur=True)
+      norm_img = np.float64(raw_image) / 255
+      gradcam = np.float64(gradcam[0][1])
+      avg_gradcam = getAttMap(norm_img, gradcam, blur=True)
       cv2.imshow("LAVISServer Text Localization",
-                 cv2.cvtColor(avg_gradcam, cv2.COLOR_RGB2BGR))
+                 cv2.cvtColor(np.uint8(avg_gradcam * 255), cv2.COLOR_RGB2BGR))
       cv2.waitKey(1)
     return response
 
   def VisualQuestionAnswering(self, request, context):
     cv_array_rgb = image_proto_to_cv_array(request.image)
-    cv_array_bgr = cv2.cvtColor(cv_array_rgb, cv2.COLOR_RGB2BGR)
-    raw_image = Image.fromarray(cv2.resize(cv_array_rgb, self.dst_size))
+    #cv_array_rgb = cv2.resize(cv_array_rgb, self.dst_size)
+    raw_image = Image.fromarray(cv_array_rgb)
     image = self.vis_processors["eval"](raw_image).unsqueeze(0).to(self.device)
     result = self.model.predict_answers(samples={
         "image": image,
@@ -100,6 +105,8 @@ class LAVISServer(LAVISServerServicer):
                                         inference_method='generate')
     response = VisualQuestionAnsweringResponse(answer=result[0])
     if self.use_gui:
+      cv_array_bgr = cv2.cvtColor(image_proto_to_cv_array(request.image),
+                                  cv2.COLOR_RGB2BGR)
       cv2.imshow("LAVISServer Visual Question Answering", cv_array_bgr)
       cv2.waitKey(1)
     return response
