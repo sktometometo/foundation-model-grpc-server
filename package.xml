@@ -17,6 +17,6 @@
     <exec_depend>message_runtime</exec_depend>
 
     <export>
-        <pip_requirements>requirements.txt</pip_requirements>
+        <pip_requirements>requirements_ros.txt</pip_requirements>
     </export>
 </package>
