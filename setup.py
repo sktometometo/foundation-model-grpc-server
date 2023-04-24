@@ -9,7 +9,7 @@ except:
 
 def get_requirements():
   lib_folder = os.path.dirname(os.path.realpath(__file__))
-  requirement_path = lib_folder + ('/requirements.txt' if ros_enabled else '/requirements_ros.txt')
+  requirement_path = lib_folder + ('/requirements_ros.txt' if ros_enabled else '/requirements.txt')
   install_requires = []
   if os.path.isfile(requirement_path):
     with open(requirement_path) as f:
