@@ -9,10 +9,18 @@
         output="screen">
     </node>
 
-    <node pkg="LAVIS_grpc_server" type="sample_query_node.py" name="sample_query_node">
+    <node pkg="LAVIS_grpc_server" type="sample_query_node.py" name="sample_query_node"
+        output="screen">
         <remap from="~image" to="/usb_cam/image_raw"/>
         <remap from="~image_captioning" to="/LAVIS_grpc_bridge_server/image_captioning"/>
+        <remap from="~visual_question_answering"
+            to="/LAVIS_grpc_bridge_server/visual_question_answering"/>
+        <remap from="~speech_to_text" to="/speech_to_text"/>
     </node>
 
-    <include file="$(find sound_play)/soundplay_node.launch"/>
+    <include file="$(find ros_speech_recognition)/launch/speech_recognition.launch">
+        <arg name="continuous" value="true"/>
+        <arg name="voice_topic" value="/speech_to_text"/>
+        <arg name="language" value="en-US"/>
+    </include>
 </launch>

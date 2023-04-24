@@ -19,6 +19,7 @@ catkin_generate_virtualenv(
 add_service_files(
   FILES
   ImageCaptioning.srv
+  VisualQuestionAnswering.srv
 )
 
 generate_messages(

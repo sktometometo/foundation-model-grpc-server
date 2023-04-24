@@ -41,11 +41,13 @@ class LAVISServer(LAVISServerServicer):
 
   def ImageCaptioning(self, request, context):
     cv_array_rgb = image_proto_to_cv_array(request.image)
-    cv_array_rgb = cv2.resize(cv_array_rgb, self.dst_size)
+    #cv_array_rgb = cv2.resize(cv_array_rgb, self.dst_size)
     raw_image = Image.fromarray(cv_array_rgb)
     image = self.vis_processors["eval"](raw_image).unsqueeze(0).to(self.device)
     result = self.model.generate({"image": image})
     response = ImageCaptioningResponse(caption=result[0])
+    logger.info("Got image shape: {}".format(
+        image_proto_to_cv_array(request.image).shape))
     logger.info("Generate caption: {}".format(response))
     if self.use_gui:
       cv_array_bgr = cv2.cvtColor(image_proto_to_cv_array(request.image),
@@ -63,7 +65,7 @@ class LAVISServer(LAVISServerServicer):
     result = self.model.generate({'image': image, 'prompt': prompt})
     response = InstructedGenerationResponse(response=result[0])
     logger.info("Get image with {} size with prompt {}".format(
-        cv_array_rgb.shape, prompt))
+        image_proto_to_cv_array(request.image).shape, prompt))
     logger.info("Generate caption: {}".format(response))
     if self.use_gui:
       cv_array_bgr = cv2.cvtColor(image_proto_to_cv_array(request.image),
@@ -84,6 +86,8 @@ class LAVISServer(LAVISServerServicer):
     response = TextLocalizationResponse()
     response.heatmap.CopyFrom(cv_array_to_image_proto(
         np.float32(whole_gradcam)))
+    logger.info("Get image with {} size with prompt {}".format(
+        image_proto_to_cv_array(request.image).shape, request.text))
     if self.use_gui:
       norm_img = np.float64(raw_image) / 255
       gradcam = np.float64(gradcam[0][1])
@@ -104,6 +108,9 @@ class LAVISServer(LAVISServerServicer):
     },
                                         inference_method='generate')
     response = VisualQuestionAnsweringResponse(answer=result[0])
+    logger.info("Get image with {} size with prompt {}".format(
+        image_proto_to_cv_array(request.image).shape, request.question))
+    logger.info("answer: {}".format(result[0]))
     if self.use_gui:
       cv_array_bgr = cv2.cvtColor(image_proto_to_cv_array(request.image),
                                   cv2.COLOR_RGB2BGR)
