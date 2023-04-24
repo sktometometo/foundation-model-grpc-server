@@ -1,12 +1,16 @@
 import os
 from distutils.core import setup
+try:
+  from catkin_pkg.python_setup import generate_distutils_setup
+  ros_enabled = True
+else:
+  ros_enabled = False
 
 
 def get_requirements():
   lib_folder = os.path.dirname(os.path.realpath(__file__))
-  requirement_path = lib_folder + '/requirements.txt'
-  install_requires = [
-  ]  # Here we'll get: ["gunicorn", "docutils>=0.3", "lxml==0.5a7"]
+  requirement_path = lib_folder + ('/requirements.txt' if ros_enabled else '/requirements_ros.txt')
+  install_requires = []
   if os.path.isfile(requirement_path):
     with open(requirement_path) as f:
       install_requires = f.read().splitlines()
@@ -37,11 +41,9 @@ package_info = {
     ]
 }
 
-try:
-  from catkin_pkg.python_setup import generate_distutils_setup
-
+if ros_enabled:
   d = generate_distutils_setup(**package_info)
-except ModuleNotFoundError as e:
+else:
   d = package_info
   d.update({
       'name': 'LAVIS_grpc_server',
