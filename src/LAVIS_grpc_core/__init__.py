@@ -22,7 +22,7 @@ models = {
 
 def download_model_cache():
   logging.basicConfig(level=logging.INFO)
-  for key, value in models.items:
+  for key, value in models.items():
     name = value[0]
     model_type = value[1]
     load_model_and_preprocess(name=name,
