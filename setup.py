@@ -28,12 +28,12 @@ package_info = {
         get_requirements(),
     "entry_points": {
         'console_scripts': [
-            "download_model_cache = LAVIS_grpc_server:download_model_cache",
+            "download_model_cache = LAVIS_grpc_core:download_model_cache",
         ],
         'gui_scripts': [
-            "run_lavis_server = LAVIS_grpc_server:main_server",
-            "sample_lavis_client = LAVIS_grpc_server:main_client_sample",
-            "sample_continuous_captioning = LAVIS_grpc_server.continuous_captioning:main"
+            "run_lavis_server = LAVIS_grpc_core:main_server",
+            "sample_lavis_client = LAVIS_grpc_core:main_client_sample",
+            "sample_continuous_captioning = LAVIS_grpc_core.continuous_captioning:main"
         ]
     },
     "classifiers": [
