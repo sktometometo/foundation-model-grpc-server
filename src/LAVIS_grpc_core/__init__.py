@@ -12,37 +12,34 @@ from LAVIS_grpc_interface.lavis_server_pb2_grpc import \
     add_LAVISServerServicer_to_server
 from LAVIS_grpc_utils import cv_array_to_image_proto, image_proto_to_cv_array
 
+models = {
+    'image_captioning': ['blip2_opt', 'pretrain_opt2.7b'],
+    'instructed_generation': ['blip2_t5', 'pretrain_flant5xxl'],
+    'text_localization': ['blip_image_text_matching', 'large'],
+    'vqa': ['blip_vqa', 'vqav2']
+}
+
 
 def download_model_cache():
   logging.basicConfig(level=logging.INFO)
-  load_model_and_preprocess(name="blip2_opt",
-                            model_type="pretrain_opt2.7b",
-                            is_eval=True,
-                            device='cpu')
-  load_model_and_preprocess(name="blip2_t5",
-                            model_type="pretrain_flant5xxl",
-                            is_eval=True,
-                            device='cpu')
-  load_model_and_preprocess(name="blip_image_text_matching",
-                            model_type="large",
-                            is_eval=True,
-                            device='cpu')
-  load_model_and_preprocess(name="blip_vqa",
-                            model_type="vqav2",
-                            is_eval=True,
-                            device='cpu')
+  for key, value in models.items:
+    name = value[0]
+    model_type = value[1]
+    load_model_and_preprocess(name=name,
+                              model_type=model_type,
+                              is_eval=True,
+                              device='cpu')
 
 
 def main_server():
-  parser = argparse.ArgumentParser(description='LAVIS Server. \n' \
-    + 'For image_captioning, blip2_opt with pretrain_opt2.7b is recommended.\n' \
-    + 'For instructed_generation, blip2_t5 and pretrain_flant5xxl is recommended.\n' \
-    + 'For text_localization, blip_image_text_matching and large is recommended.\n' \
-    + 'For vqa, blip_vqa and vqav2 is recommended.' )
-  parser.add_argument('--model-name', default='blip2_opt', help='model name')
-  parser.add_argument('--model-type',
-                      default='pretrain_opt2.7b',
-                      help='model type')
+  parser = argparse.ArgumentParser(description='LAVIS Server.')
+  parser.add_argument(
+      '--task',
+      default='image_captioning',
+      type=str,
+      help=
+      'Task type, options are \'image_captioning\', \'instructed_generation\', \'text_localization\', \'vqa\''
+  )
   parser.add_argument('--port',
                       default=50051,
                       type=int,
@@ -52,11 +49,12 @@ def main_server():
                       help='Show GUI Windows if set')
   args = parser.parse_args()
   logging.basicConfig(level=logging.INFO)
+
   server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
   add_LAVISServerServicer_to_server(
       LAVISServer(use_gui=args.use_gui,
-                  model_name=args.model_name,
-                  model_type=args.model_type), server)
+                  model_name=models[args.task][0],
+                  model_type=models[args.task][1]), server)
   server.add_insecure_port('[::]:{}'.format(args.port))
   server.start()
   server.wait_for_termination()
