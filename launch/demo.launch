@@ -8,7 +8,7 @@
         </rosparam>
     </node>
 
-    <include file="$(find LAVIS-grpc-server)/launch/rosbridge_server.launch">
+    <include file="$(find LAVIS_grpc_server)/launch/rosbridge_server.launch">
         <arg name="host" value="$(arg host)"/>
         <arg name="port" value="$(arg port)"/>
     </include>
