@@ -3,13 +3,12 @@
 import logging
 
 import rospy
-from sensor_msgs.msg import Image
-from sound_play.libsoundplay import SoundClient
-from speech_recognition_msgs.msg import SpeechRecognitionCandidates
-
 from LAVIS_grpc_server.srv import (ImageCaptioning, ImageCaptioningRequest,
                                    VisualQuestionAnswering,
                                    VisualQuestionAnsweringRequest)
+from sensor_msgs.msg import Image
+from sound_play.libsoundplay import SoundClient
+from speech_recognition_msgs.msg import SpeechRecognitionCandidates
 
 
 class SampleQueryNode:

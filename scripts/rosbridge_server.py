@@ -5,13 +5,13 @@ import logging
 import grpc
 import numpy as np
 import rospy
-
-import LAVIS_grpc_server.lavis_server_pb2 as lavis_server_pb2
-import LAVIS_grpc_server.lavis_server_pb2_grpc as lavis_server_pb2_grpc
 from LAVIS_grpc_server.srv import (ImageCaptioning, ImageCaptioningResponse,
                                    VisualQuestionAnswering,
                                    VisualQuestionAnsweringResponse)
-from LAVIS_grpc_server.utils import cv_array_to_image_proto
+
+import LAVIS_grpc_interface.lavis_server_pb2 as lavis_server_pb2
+import LAVIS_grpc_interface.lavis_server_pb2_grpc as lavis_server_pb2_grpc
+from LAVIS_grpc_utils import cv_array_to_image_proto
 
 
 class Node:

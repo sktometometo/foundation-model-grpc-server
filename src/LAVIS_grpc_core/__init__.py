@@ -4,19 +4,17 @@ from concurrent import futures
 
 import cv2
 import grpc
+from lavis.models import load_model_and_preprocess
 
-import LAVIS_grpc_server.lavis_server_pb2 as lavis_server_pb2
-import LAVIS_grpc_server.lavis_server_pb2_grpc as lavis_server_pb2_grpc
-from LAVIS_grpc_server.lavis_server_pb2_grpc import \
+from LAVIS_grpc_core.server import LAVISServer
+from LAVIS_grpc_interface import lavis_server_pb2, lavis_server_pb2_grpc
+from LAVIS_grpc_interface.lavis_server_pb2_grpc import \
     add_LAVISServerServicer_to_server
-from LAVIS_grpc_server.server import LAVISServer
-from LAVIS_grpc_server.utils import (cv_array_to_image_proto,
-                                     image_proto_to_cv_array)
+from LAVIS_grpc_utils import cv_array_to_image_proto, image_proto_to_cv_array
 
 
 def download_model_cache():
   logging.basicConfig(level=logging.INFO)
-  from lavis.models import load_model_and_preprocess
   load_model_and_preprocess(name="blip2_opt",
                             model_type="pretrain_opt2.7b",
                             is_eval=True,

@@ -1,5 +1,6 @@
 import os
 from distutils.core import setup
+
 try:
   from catkin_pkg.python_setup import generate_distutils_setup
   ros_enabled = True
@@ -9,7 +10,8 @@ except:
 
 def get_requirements():
   lib_folder = os.path.dirname(os.path.realpath(__file__))
-  requirement_path = lib_folder + ('/requirements_ros.txt' if ros_enabled else '/requirements.txt')
+  requirement_path = lib_folder + ('/requirements_ros.txt'
+                                   if ros_enabled else '/requirements.txt')
   install_requires = []
   if os.path.isfile(requirement_path):
     with open(requirement_path) as f:
@@ -18,7 +20,7 @@ def get_requirements():
 
 
 package_info = {
-    "packages": ['LAVIS_grpc_server'],
+    "packages": ['LAVIS_grpc_core', 'LAVIS_grpc_interface', 'LAVIS_grpc_utils'],
     "package_dir": {
         '': 'src'
     },
