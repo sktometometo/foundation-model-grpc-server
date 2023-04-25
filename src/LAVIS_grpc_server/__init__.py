@@ -5,7 +5,8 @@ from concurrent import futures
 import cv2
 import grpc
 
-from LAVIS_grpc_server import lavis_server_pb2, lavis_server_pb2_grpc
+import LAVIS_grpc_server.lavis_server_pb2 as lavis_server_pb2
+import LAVIS_grpc_server.lavis_server_pb2_grpc as lavis_server_pb2_grpc
 from LAVIS_grpc_server.lavis_server_pb2_grpc import \
     add_LAVISServerServicer_to_server
 from LAVIS_grpc_server.server import LAVISServer
