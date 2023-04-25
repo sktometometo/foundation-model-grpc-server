@@ -4,8 +4,6 @@ from concurrent import futures
 
 import cv2
 import grpc
-import torch
-from lavis.models import load_model_and_preprocess
 
 from LAVIS_grpc_server import lavis_server_pb2, lavis_server_pb2_grpc
 from LAVIS_grpc_server.lavis_server_pb2_grpc import \
@@ -17,6 +15,7 @@ from LAVIS_grpc_server.utils import (cv_array_to_image_proto,
 
 def download_model_cache():
   logging.basicConfig(level=logging.INFO)
+  from lavis.models import load_model_and_preprocess
   load_model_and_preprocess(name="blip2_opt",
                             model_type="pretrain_opt2.7b",
                             is_eval=True,
