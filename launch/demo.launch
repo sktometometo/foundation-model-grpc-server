@@ -1,13 +1,17 @@
 <launch>
+    <arg name="host" default="localhost"/>
+    <arg name="port" default="50051"/>
+
     <node pkg="usb_cam" type="usb_cam_node" name="usb_cam">
         <rosparam>
             pixel_format: yuyv
         </rosparam>
     </node>
 
-    <node pkg="LAVIS_grpc_server" type="rosbridge_server.py" name="LAVIS_grpc_bridge_server"
-        output="screen">
-    </node>
+    <include file="$(find LAVIS-grpc-server)/launch/rosbridge_server.launch">
+        <arg name="host" value="$(arg host)"/>
+        <arg name="port" value="$(arg port)"/>
+    </include>
 
     <node pkg="LAVIS_grpc_server" type="sample_query_node.py" name="sample_query_node"
         output="screen">
