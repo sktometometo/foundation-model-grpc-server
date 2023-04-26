@@ -33,10 +33,9 @@ catkin_package(
 
 catkin_install_python(PROGRAMS
     scripts/rosbridge_server.py
-    scripts/sample_query_node.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-install(FILES requirements.txt
+install(FILES requirements.txt requirements_ros.txt
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
