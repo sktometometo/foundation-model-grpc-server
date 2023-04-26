@@ -16,9 +16,6 @@
     <build_depend>message_generation</build_depend>
     <exec_depend>message_runtime</exec_depend>
 
-    <exec_depend>usb_cam</exec_depend>
-    <exec_depend>ros_speech_recognition</exec_depend>
-
     <export>
         <pip_requirements>requirements_ros.txt</pip_requirements>
     </export>
