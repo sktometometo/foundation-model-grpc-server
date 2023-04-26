@@ -1,14 +1,9 @@
 <launch>
     <arg name="host" default="localhost"/>
     <arg name="port" default="50051"/>
-    <arg name="video_device" defalut="/dev/video0"/>
 
-    <node pkg="usb_cam" type="usb_cam_node" name="usb_cam">
-        <rosparam subst_value="true">
-            pixel_format: yuyv
-            video_device: $(arg video_device)
-        </rosparam>
-    </node>
+    <include file="$(find LAVIS_grpc_server)/launch/camera.launch">
+    </include>
 
     <include file="$(find LAVIS_grpc_server)/launch/rosbridge_server.launch">
         <arg name="host" value="$(arg host)"/>

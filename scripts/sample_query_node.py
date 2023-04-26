@@ -35,6 +35,7 @@ class SampleQueryNode:
     req = VisualQuestionAnsweringRequest()
     req.image = self.msg_image
     req.question = msg.transcript[0]
+    rospy.loginfo("Q: {}".format(req.question))
     res = self.client_vqa(req)
     rospy.loginfo("A: {}".format(res.answer))
     self.sound_client.say(res.answer, blocking=True)
