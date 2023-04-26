@@ -65,7 +65,7 @@ class SampleQueryNode:
       image.height = cv_array.shape[0]
       image.width = cv_array.shape[1]
       image.encoding = '8UC3'
-      image.data.frombytes(cv_array.tobytes())
+      image.data = cv_array.tostring()
       image.step = len(image.data) // image.header
 
     req = VisualQuestionAnsweringRequest()
