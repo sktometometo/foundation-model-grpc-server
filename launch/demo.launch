@@ -2,8 +2,10 @@
     <arg name="host" default="localhost"/>
     <arg name="port" default="50051"/>
 
+    <!-- 
     <include file="$(find LAVIS_grpc_server)/launch/camera.launch">
     </include>
+    -->
 
     <include file="$(find LAVIS_grpc_server)/launch/rosbridge_server.launch">
         <arg name="host" value="$(arg host)"/>
@@ -17,6 +19,11 @@
         <remap from="~visual_question_answering"
             to="/LAVIS_grpc_bridge_server/visual_question_answering"/>
         <remap from="~speech_to_text" to="/speech_to_text"/>
+        <rosparam subst_value="true">
+            camera_type: opencv
+            video_device_index: 1
+            task_type: vqa
+        </rosparam>
     </node>
 
     <include file="$(find ros_speech_recognition)/launch/speech_recognition.launch">
