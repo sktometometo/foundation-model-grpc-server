@@ -11,7 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_python_setup()
 
 catkin_generate_virtualenv(
-    PYTHON_INTERPRETER python3.8
+    PYTHON_INTERPRETER python3
     USE_SYSTEM_PACKAGES FALSE
     CHECK_VENV FALSE
 )
