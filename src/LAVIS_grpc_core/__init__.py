@@ -92,6 +92,11 @@ def main_client_sample():
     type=int,
     help='Camera index'
   )
+  parser.add_argument(
+    '--once',
+    action='store_true',
+    help='Run once if set'
+  )
   parser.add_argument('--input-text',
                       default='I am a robot.',
                       type=str,
@@ -133,6 +138,8 @@ def main_client_sample():
         request.image.CopyFrom(image)
         request.question = args.input_text
         result = stub.VisualQuestionAnswering(request, wait_for_ready=True)
-        logger.info('response: {}'.format(result.answer))
+        logger.info('response: {}'.format(result.answer))      
+      if args.once:
+        break
   cv2.destroyAllWindows()
   logger.info('Finished')
