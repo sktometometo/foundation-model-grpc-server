@@ -81,6 +81,17 @@ def main_client_sample():
       help=
       'Task type, options are \'image_captioning\', \'instructed_generation\', \'text_localization\', \'vqa\''
   )
+  parser.add_argument(
+    '--use-gui',
+    action='store_true',
+    help='Use gui if set'
+  )
+  parser.add_argument(
+    '--camera-id',
+    default=0,
+    type=int,
+    help='Camera index'
+  )
   parser.add_argument('--input-text',
                       default='I am a robot.',
                       type=str,
@@ -88,15 +99,16 @@ def main_client_sample():
   args = parser.parse_args()
   logging.basicConfig(level=logging.INFO)
   logger = logging.getLogger(__name__)
-  cam = cv2.VideoCapture(0)
+  cam = cv2.VideoCapture(args.camera_id)
   with grpc.insecure_channel('{}:{}'.format(args.server_address,
                                             args.port)) as channel:
     stub = lavis_server_pb2_grpc.LAVISServerStub(channel)
     while True:
       ret, frame = cam.read()
-      cv2.imshow('LAVISClient', frame)
-      if cv2.waitKey(1) != -1:
-        break
+      if args.use_gui:
+        cv2.imshow('LAVISClient', frame)
+        if cv2.waitKey(1) != -1:
+          break
       image = cv_array_to_image_proto(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
       if args.task == 'image_captioning':
         request = lavis_server_pb2.ImageCaptioningRequest()
