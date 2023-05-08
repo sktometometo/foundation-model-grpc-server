@@ -47,6 +47,9 @@ def main_server():
   parser.add_argument('--use-gui',
                       action='store_true',
                       help='Show GUI Windows if set')
+  parser.add_argument('--log-directory',
+                      default=None,
+                      help='Directory for log saving')
   args = parser.parse_args()
   logging.basicConfig(level=logging.INFO)
 
@@ -54,7 +57,8 @@ def main_server():
   add_LAVISServerServicer_to_server(
       LAVISServer(use_gui=args.use_gui,
                   model_name=models[args.task][0],
-                  model_type=models[args.task][1]), server)
+                  model_type=models[args.task][1],
+                  log_directory=args.log_directory), server)
   server.add_insecure_port('[::]:{}'.format(args.port))
   server.start()
   server.wait_for_termination()
