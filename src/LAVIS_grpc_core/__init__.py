@@ -55,7 +55,7 @@ def download_model_cache():
 
 
 def main_server():
-  parser = argparse.ArgumentParser(description='LAVIS Server.')F
+  parser = argparse.ArgumentParser(description='LAVIS Server.')
   parser.add_argument('--port',
                       default=50051,
                       type=int,
@@ -96,22 +96,9 @@ def main_client_sample():
       help=
       'Task type, options are \'image_captioning\', \'instructed_generation\', \'text_localization\', \'vqa\''
   )
-  parser.add_argument(
-    '--use-gui',
-    action='store_true',
-    help='Use gui if set'
-  )
-  parser.add_argument(
-    '--camera-id',
-    default=0,
-    type=int,
-    help='Camera index'
-  )
-  parser.add_argument(
-    '--once',
-    action='store_true',
-    help='Run once if set'
-  )
+  parser.add_argument('--use-gui', action='store_true', help='Use gui if set')
+  parser.add_argument('--camera-id', default=0, type=int, help='Camera index')
+  parser.add_argument('--once', action='store_true', help='Run once if set')
   parser.add_argument('--input-text',
                       default='I am a robot.',
                       type=str,
@@ -153,7 +140,7 @@ def main_client_sample():
         request.image.CopyFrom(image)
         request.question = args.input_text
         result = stub.VisualQuestionAnswering(request, wait_for_ready=True)
-        logger.info('response: {}'.format(result.answer))      
+        logger.info('response: {}'.format(result.answer))
       if args.once:
         break
   cv2.destroyAllWindows()
