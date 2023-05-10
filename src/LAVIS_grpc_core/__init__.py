@@ -19,12 +19,35 @@ models = {
     'vqa': ['blip_vqa', 'vqav2']
 }
 
+model_device_dict = {
+    'ImageCaptioning': {
+        'device': 'cuda:0',
+        'model_name': 'blip2_opt',
+        'model_type': 'pretrain_opt2.7b'
+    },
+    'InstructedGeneration': {
+        'device': 'cuda:1',
+        'model_name': 'blip2_t5',
+        'model_type': 'pretrain_flant5xxl'
+    },
+    'TextLocalization': {
+        'device': 'cuda:2',
+        'model_name': 'blip_image_text_matching',
+        'model_type': 'large'
+    },
+    'VisualQuestionAnswering': {
+        'device': 'cuda:3',
+        'model_name': 'blip_vqa',
+        'model_type': 'vqav2'
+    }
+}
+
 
 def download_model_cache():
   logging.basicConfig(level=logging.INFO)
-  for key, value in models.items():
-    name = value[0]
-    model_type = value[1]
+  for key, value in model_device_dict.items():
+    name = value['model_name']
+    model_type = value['model_name']
     load_model_and_preprocess(name=name,
                               model_type=model_type,
                               is_eval=True,
@@ -32,14 +55,7 @@ def download_model_cache():
 
 
 def main_server():
-  parser = argparse.ArgumentParser(description='LAVIS Server.')
-  parser.add_argument(
-      '--task',
-      default='image_captioning',
-      type=str,
-      help=
-      'Task type, options are \'image_captioning\', \'instructed_generation\', \'text_localization\', \'vqa\''
-  )
+  parser = argparse.ArgumentParser(description='LAVIS Server.')F
   parser.add_argument('--port',
                       default=50051,
                       type=int,
@@ -56,9 +72,8 @@ def main_server():
   server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
   add_LAVISServerServicer_to_server(
       LAVISServer(use_gui=args.use_gui,
-                  model_name=models[args.task][0],
-                  model_type=models[args.task][1],
-                  log_directory=args.log_directory), server)
+                  log_directory=args.log_directory,
+                  model_device_dict=model_device_dict), server)
   server.add_insecure_port('[::]:{}'.format(args.port))
   server.start()
   server.wait_for_termination()
