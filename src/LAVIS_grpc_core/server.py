@@ -52,7 +52,7 @@ class LAVISServer(LAVISServerServicer):
     self.use_gui = use_gui
 
     self.models = {}
-    for task_name, model_and_device in model_device_dict:
+    for task_name, model_and_device in model_device_dict.items():
       device = torch.device(model_and_device['device'])
       model_name = model_and_device['model_name']
       model_type = model_and_device['model_type']
