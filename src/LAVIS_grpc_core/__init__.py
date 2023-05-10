@@ -12,6 +12,25 @@ from LAVIS_grpc_interface.lavis_server_pb2_grpc import \
     add_LAVISServerServicer_to_server
 from LAVIS_grpc_utils import cv_array_to_image_proto, image_proto_to_cv_array
 
+model_list = {
+    'blip2_opt2.7b': {
+        'model_name': 'blip2_opt',
+        'model_type': 'pretrain_opt2.7b'
+    },
+    'blip2_flant5xl': {
+        'model_name': 'blip2_t5',
+        'model_type': 'pretrain_flant5xl'
+    },
+    'blip_text_localization': {
+        'model_name': 'blip_image_text_matching',
+        'model_type': 'large'
+    },
+    'blip_vqa': {
+        'model_name': 'blip_vqa',
+        'model_type': 'vqav2'
+    }
+}
+
 model_device_dict = {
     'ImageCaptioning': {
         'device': 'cuda:0',
