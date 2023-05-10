@@ -12,13 +12,6 @@ from LAVIS_grpc_interface.lavis_server_pb2_grpc import \
     add_LAVISServerServicer_to_server
 from LAVIS_grpc_utils import cv_array_to_image_proto, image_proto_to_cv_array
 
-models = {
-    'image_captioning': ['blip2_opt', 'pretrain_opt2.7b'],
-    'instructed_generation': ['blip2_t5', 'pretrain_flant5xxl'],
-    'text_localization': ['blip_image_text_matching', 'large'],
-    'vqa': ['blip_vqa', 'vqav2']
-}
-
 model_device_dict = {
     'ImageCaptioning': {
         'device': 'cuda:0',
@@ -28,7 +21,7 @@ model_device_dict = {
     'InstructedGeneration': {
         'device': 'cuda:1',
         'model_name': 'blip2_t5',
-        'model_type': 'pretrain_flant5xxl'
+        'model_type': 'pretrain_flant5xl'
     },
     'TextLocalization': {
         'device': 'cuda:2',
@@ -47,7 +40,7 @@ def download_model_cache():
   logging.basicConfig(level=logging.INFO)
   for key, value in model_device_dict.items():
     name = value['model_name']
-    model_type = value['model_name']
+    model_type = value['model_type']
     load_model_and_preprocess(name=name,
                               model_type=model_type,
                               is_eval=True,
