@@ -26,27 +26,7 @@ class LAVISServer(LAVISServerServicer):
       self,
       use_gui: bool,
       log_directory=None,
-      model_device_dict={
-          'ImageCaptioning': {
-              'device': 'cuda:0',
-              'model_name': 'blip2_opt',
-              'model_type': 'pretrain_opt2.7b'
-          },
-          'InstructedGeneration': {
-              'device': 'cuda:1',
-              'model_name': 'blip2_t5',
-              'model_type': 'pretrain_flant5xl'
-          },
-          'TextLocalization': {
-              'device': 'cuda:2',
-              'model_name': 'blip_image_text_matching',
-              'model_type': 'large'
-          },
-          'VisualQuestionAnswering': {
-              'device': 'cuda:3',
-              'model_name': 'blip_vqa',
-              'model_type': 'vqav2'
-          }
+      model_device_dict={}
       }):
     self.log_directory = log_directory
     self.use_gui = use_gui
@@ -81,10 +61,10 @@ class LAVISServer(LAVISServerServicer):
         yaml.dump(data, f, encoding='utf-8', allow_unicode=True)
 
   def ImageCaptioning(self, request, context):
-    model = self.models['ImageCaptioning']['model']
-    device = self.models['ImageCaptioning']['device']
-    vis_processors = self.models['ImageCaptioning']['vis_processors']
-    text_processors = self.models['ImageCaptioning']['text_processors']
+    model = self.models['image_captioning']['model']
+    device = self.models['image_captioning']['device']
+    vis_processors = self.models['image_captioning']['vis_processors']
+    text_processors = self.models['image_captioning']['text_processors']
     cv_array_rgb = image_proto_to_cv_array(request.image)
     cv_array_bgr = cv2.cvtColor(image_proto_to_cv_array(request.image),
                                 cv2.COLOR_RGB2BGR)
@@ -110,10 +90,10 @@ class LAVISServer(LAVISServerServicer):
     return response
 
   def InstructedGeneration(self, request, context):
-    model = self.models['InstructedGeneration']['model']
-    device = self.models['InstructedGeneration']['device']
-    vis_processors = self.models['InstructedGeneration']['vis_processors']
-    text_processors = self.models['InstructedGeneration']['text_processors']
+    model = self.models['instructed_generation']['model']
+    device = self.models['instructed_generation']['device']
+    vis_processors = self.models['instructed_generation']['vis_processors']
+    text_processors = self.models['instructed_generation']['text_processors']
     cv_array_rgb = image_proto_to_cv_array(request.image)
     cv_array_bgr = cv2.cvtColor(image_proto_to_cv_array(request.image),
                                 cv2.COLOR_RGB2BGR)
@@ -143,10 +123,10 @@ class LAVISServer(LAVISServerServicer):
     return response
 
   def TextLocalization(self, request, context):
-    model = self.models['TextLocalization']['model']
-    device = self.models['TextLocalization']['device']
-    vis_processors = self.models['TextLocalization']['vis_processors']
-    text_processors = self.models['TextLocalization']['text_processors']
+    model = self.models['text_localization']['model']
+    device = self.models['text_localization']['device']
+    vis_processors = self.models['text_localization']['vis_processors']
+    text_processors = self.models['text_localization']['text_processors']
     cv_array_rgb = image_proto_to_cv_array(request.image)
     cv_array_bgr = cv2.cvtColor(image_proto_to_cv_array(request.image),
                                 cv2.COLOR_RGB2BGR)
@@ -185,10 +165,10 @@ class LAVISServer(LAVISServerServicer):
     return response
 
   def VisualQuestionAnswering(self, request, context):
-    model = self.models['VisualQuestionAnswering']['model']
-    device = self.models['VisualQuestionAnswering']['device']
-    vis_processors = self.models['VisualQuestionAnswering']['vis_processors']
-    text_processors = self.models['VisualQuestionAnswering']['text_processors']
+    model = self.models['visual_question_answering']['model']
+    device = self.models['visual_question_answering']['device']
+    vis_processors = self.models['visual_question_answering']['vis_processors']
+    text_processors = self.models['visual_question_answering']['text_processors']
     cv_array_rgb = image_proto_to_cv_array(request.image)
     cv_array_bgr = cv2.cvtColor(image_proto_to_cv_array(request.image),
                                 cv2.COLOR_RGB2BGR)

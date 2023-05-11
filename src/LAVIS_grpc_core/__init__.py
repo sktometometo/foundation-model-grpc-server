@@ -31,33 +31,10 @@ model_list = {
     }
 }
 
-model_device_dict = {
-    'ImageCaptioning': {
-        'device': 'cuda:0',
-        'model_name': 'blip2_opt',
-        'model_type': 'pretrain_opt2.7b'
-    },
-    'InstructedGeneration': {
-        'device': 'cuda:1',
-        'model_name': 'blip2_t5',
-        'model_type': 'pretrain_flant5xl'
-    },
-    'TextLocalization': {
-        'device': 'cuda:2',
-        'model_name': 'blip_image_text_matching',
-        'model_type': 'large'
-    },
-    'VisualQuestionAnswering': {
-        'device': 'cuda:3',
-        'model_name': 'blip_vqa',
-        'model_type': 'vqav2'
-    }
-}
-
 
 def download_model_cache():
   logging.basicConfig(level=logging.INFO)
-  for key, value in model_device_dict.items():
+  for key, value in model_list.items():
     name = value['model_name']
     model_type = value['model_type']
     load_model_and_preprocess(name=name,
@@ -78,8 +55,42 @@ def main_server():
   parser.add_argument('--log-directory',
                       default=None,
                       help='Directory for log saving')
+  parser.add_argument('--device-image-captioning', default=None, type=int)
+  parser.add_argument('--model-image-captioning', default=None, type=str)
+  parser.add_argument('--device-instructed-generation', default=None, type=int)
+  parser.add_argument('--model-instructed-generation', default=None, type=str)
+  parser.add_argument('--device-text-localization', default=None, type=int)
+  parser.add_argument('--model-text-localization', default=None, type=str)
+  parser.add_argument('--device-visual-question-answering', default=None, type=int)
+  parser.add_argument('--model-visual-question-answering', default=None, type=str)
   args = parser.parse_args()
   logging.basicConfig(level=logging.INFO)
+
+  model_device_dict = {}
+  if args.device_image_captioning is not None and args.model_image_captioning is not None:
+    model_device_dict['image_captioning'] = {
+      'device': 'cuda:{}'.format(args.device_image_captioning),
+      'model_name': model_list[args.model_image_captioning]['model_name'],
+      'model_type': model_list[args.model_image_captioning]['model_type']
+    }
+  if args.device_instructed_generation is not None and args.model_instructed_generation is not None:
+    model_device_dict['instructed_generation'] = {
+      'device': 'cuda:{}'.format(args.device_instructed_generation),
+      'model_name': model_list[args.model_instructed_generation]['model_name'],
+      'model_type': model_list[args.model_instructed_generation]['model_type']
+    }
+  if args.device_text_localization is not None and args.model_text_localization is not None:
+    model_device_dict['text_localization'] = {
+      'device': 'cuda:{}'.format(args.device_text_localization),
+      'model_name': model_list[args.model_text_localization]['model_name'],
+      'model_type': model_list[args.model_text_localization]['model_type']
+    }
+  if args.device_visual_question_answering is not None and args.model_visual_question_answering is not None:
+    model_device_dict['visual_question_answering'] = {
+      'device': 'cuda:{}'.format(args.device_visual_question_answering),
+      'model_name': model_list[args.model_visual_question_answering]['model_name'],
+      'model_type': model_list[args.model_visual_question_answering]['model_type']
+    }
 
   server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
   add_LAVISServerServicer_to_server(
