@@ -22,12 +22,7 @@ logger = logging.getLogger(__name__)
 
 class LAVISServer(LAVISServerServicer):
 
-  def __init__(
-      self,
-      use_gui: bool,
-      log_directory=None,
-      model_device_dict={}
-      }):
+  def __init__(self, use_gui: bool, log_directory=None, model_device_dict={}):
     self.log_directory = log_directory
     self.use_gui = use_gui
 
@@ -168,7 +163,8 @@ class LAVISServer(LAVISServerServicer):
     model = self.models['visual_question_answering']['model']
     device = self.models['visual_question_answering']['device']
     vis_processors = self.models['visual_question_answering']['vis_processors']
-    text_processors = self.models['visual_question_answering']['text_processors']
+    text_processors = self.models['visual_question_answering'][
+        'text_processors']
     cv_array_rgb = image_proto_to_cv_array(request.image)
     cv_array_bgr = cv2.cvtColor(image_proto_to_cv_array(request.image),
                                 cv2.COLOR_RGB2BGR)
