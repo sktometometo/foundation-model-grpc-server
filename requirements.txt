@@ -1,3 +1,4 @@
 grpcio-tools
 salesforce-lavis
 opencv-python
+deep-translator==1.10.1

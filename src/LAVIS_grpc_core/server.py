@@ -6,6 +6,7 @@ import cv2
 import numpy as np
 import torch
 import yaml
+from deep_translator import GoogleTranslator
 from lavis.common.gradcam import getAttMap
 from lavis.models import load_model_and_preprocess
 from lavis.models.blip_models.blip_image_text_matching import compute_gradcam
@@ -22,9 +23,18 @@ logger = logging.getLogger(__name__)
 
 class LAVISServer(LAVISServerServicer):
 
-  def __init__(self, use_gui: bool, log_directory=None, model_device_dict={}):
+  def __init__(self,
+               use_gui: bool,
+               log_directory=None,
+               model_device_dict={},
+               use_translator=False,
+               target_language='ja'):
     self.log_directory = log_directory
     self.use_gui = use_gui
+    self.use_translator = use_translator
+    self.input_translator = GoogleTranslator(source='auto', target='en')
+    self.output_translator = GoogleTranslator(source='auto',
+                                              target=target_language)
 
     self.models = {}
     for task_name, model_and_device in model_device_dict.items():
@@ -41,6 +51,18 @@ class LAVISServer(LAVISServerServicer):
       }
 
     logger.info('Initialized')
+
+  def translate_input_text(self, text):
+    if self.use_translator:
+      return self.input_translator.translate(text)
+    else:
+      return text
+
+  def translate_output_text(self, text):
+    if self.use_translator:
+      return self.output_translator.translate(text)
+    else:
+      return text
 
   def __del__(self):
     if self.use_gui:
@@ -66,7 +88,8 @@ class LAVISServer(LAVISServerServicer):
     raw_image = Image.fromarray(cv_array_rgb)
     image = vis_processors["eval"](raw_image).unsqueeze(0).to(device)
     result = model.generate({"image": image})
-    response = ImageCaptioningResponse(caption=result[0])
+    response = ImageCaptioningResponse(
+        caption=self.translate_output_text(result[0]))
     logger.info("Got image shape: {}".format(
         image_proto_to_cv_array(request.image).shape))
     logger.info("Generate caption: {}".format(response))
@@ -92,11 +115,12 @@ class LAVISServer(LAVISServerServicer):
     cv_array_rgb = image_proto_to_cv_array(request.image)
     cv_array_bgr = cv2.cvtColor(image_proto_to_cv_array(request.image),
                                 cv2.COLOR_RGB2BGR)
-    prompt = request.prompt
+    prompt = self.translate_input_text(request.prompt)
     raw_image = Image.fromarray(cv_array_rgb)
     image = vis_processors["eval"](raw_image).unsqueeze(0).to(device)
     result = model.generate({'image': image, 'prompt': prompt})
-    response = InstructedGenerationResponse(response=result[0])
+    response = InstructedGenerationResponse(
+        response=self.translate_output_text(result[0]))
     logger.info("Get image with {} size with prompt {}".format(
         image_proto_to_cv_array(request.image).shape, prompt))
     logger.info("Generate caption: {}".format(response))
@@ -127,7 +151,7 @@ class LAVISServer(LAVISServerServicer):
                                 cv2.COLOR_RGB2BGR)
     raw_image = Image.fromarray(cv_array_rgb)
     img = vis_processors['eval'](raw_image).unsqueeze(0).to(device)
-    txt = text_processors["eval"](request.text)
+    txt = text_processors["eval"](self.translate_input_text(request.text))
     txt_tokens = model.tokenizer(txt, return_tensors="pt").to(device)
     gradcam, _ = compute_gradcam(model, img, txt, txt_tokens, block_num=7)
     whole_gradcam = gradcam[0][1]
@@ -172,10 +196,11 @@ class LAVISServer(LAVISServerServicer):
     image = vis_processors["eval"](raw_image).unsqueeze(0).to(device)
     result = model.predict_answers(samples={
         "image": image,
-        "text_input": request.question
+        "text_input": self.translate_input_text(request.question)
     },
                                    inference_method='generate')
-    response = VisualQuestionAnsweringResponse(answer=result[0])
+    response = VisualQuestionAnsweringResponse(
+        answer=self.translate_output_text(result[0]))
     logger.info("Get image with {} size with prompt {}".format(
         image_proto_to_cv_array(request.image).shape, request.question))
     logger.info("answer: {}".format(result[0]))
