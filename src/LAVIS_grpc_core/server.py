@@ -54,12 +54,14 @@ class LAVISServer(LAVISServerServicer):
 
   def translate_input_text(self, text):
     if self.use_translator:
+      logger.info('original input text: {}'.format(text))
       return self.input_translator.translate(text)
     else:
       return text
 
   def translate_output_text(self, text):
     if self.use_translator:
+      logger.info('original output text: {}'.format(text))
       return self.output_translator.translate(text)
     else:
       return text
