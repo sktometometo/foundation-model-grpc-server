@@ -3,6 +3,7 @@ import logging
 import os
 
 import cv2
+import deep_translator
 import numpy as np
 import torch
 import yaml
@@ -54,15 +55,23 @@ class LAVISServer(LAVISServerServicer):
 
   def translate_input_text(self, text):
     if self.use_translator:
-      logger.info('original input text: {}'.format(text))
-      return self.input_translator.translate(text)
+      try:
+        logger.info('original input text: {}'.format(text))
+        return self.input_translator.translate(text)
+      except deep_translator.exceptions.NotValidPayload as error:
+        logger.error('Error: {}'.format(error))
+        return text
     else:
       return text
 
   def translate_output_text(self, text):
     if self.use_translator:
-      logger.info('original output text: {}'.format(text))
-      return self.output_translator.translate(text)
+      try:
+        logger.info('original output text: {}'.format(text))
+        return self.output_translator.translate(text)
+      except deep_translator.exceptions.NotValidPayload as error:
+        logger.error('Error: {}'.format(error))
+        return text
     else:
       return text
 
