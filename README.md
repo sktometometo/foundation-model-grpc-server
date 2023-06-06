@@ -1,6 +1,9 @@
-# LAVIS-grpc-server
+# fundation-model-grpc-server
 
-This is a python package provides grpc server for [LAVIS](https://github.com/salesforce/LAVIS).
+This is a python package provides grpc server for fundation model.
+Currently models below are supported.
+
+- [LAVIS](https://github.com/salesforce/LAVIS).
 
 ## Bare python module
 
