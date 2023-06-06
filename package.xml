@@ -1,5 +1,5 @@
 <package format="2">
-    <name>LAVIS_grpc_server</name>
+    <name>foundation_model_grpc_server</name>
     <version>0.0.1</version>
     <description>
         This package provides foo capability.

@@ -1,5 +1,6 @@
 all:
-	python3.8 -m grpc_tools.protoc -I./proto --python_out=./src/LAVIS_grpc_server --pyi_out=./src/LAVIS_grpc_server --grpc_python_out=./src/LAVIS_grpc_server ./proto/lavis-server.proto
+	python3.8 -m grpc_tools.protoc -I./proto --python_out=./src/foundation_model_grpc_interface --pyi_out=./src/foundation_model_grpc_interface --grpc_python_out=./src/foundation_model_grpc_interface ./proto/lavis-server.proto
+	sed -i "s/import lavis_server_pb2 as lavis__server__pb2/from foundation_model_grpc_interface import lavis_server_pb2 as lavis__server__pb2/" ./src/foundation_model_grpc_interface/lavis_server_pb2_grpc.py
 
 clean:
-	rm ./src/LAVIS_grpc_server/*_pb2.py ./src/LAVIS_grpc_server/*_pb2.pyi ./src/LAVIS_grpc_server/*_pb2_grpc.py
+	rm ./src/foundation_model_grpc_interface/*_pb2.py ./src/foundation_model_grpc_interface/*_pb2.pyi ./src/foundation_model_grpc_interface/*_pb2_grpc.py

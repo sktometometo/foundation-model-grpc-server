@@ -6,8 +6,8 @@ RUN apt-get update \
     libgl1-mesa-dev \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
-COPY . /workspace/LAVIS-grpc-server
-RUN pip install --no-cache-dir -e /workspace/LAVIS-grpc-server/
+COPY . /workspace/foundation-model-grpc-server
+RUN pip install --no-cache-dir -e /workspace/foundation-model-grpc-server/
 RUN ["download_model_cache"]
 
 CMD ["run_lavis_server"]

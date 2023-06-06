@@ -1,6 +1,6 @@
-# fundation-model-grpc-server
+# foundation-model-grpc-server
 
-This is a python package provides grpc server for fundation model.
+This is a python package provides grpc server for foundation model.
 Currently models below are supported.
 
 - [LAVIS](https://github.com/salesforce/LAVIS).
@@ -34,13 +34,13 @@ sample_lavis_client
 There is a docker image for server
 
 ```bash
-docker built -t sktometometo/lavis-grpc-server .
+docker built -t sktometometo/foundation-model-grpc-server .
 ```
 
 and run the server.
 
 ```bash
-docker run -p 50051:50051 --gpus all sktometometo/lavis-grpc-server
+docker run -p 50051:50051 --gpus all sktometometo/foundation-model-grpc-server
 ```
 
 ## ROS Package
@@ -49,7 +49,7 @@ docker run -p 50051:50051 --gpus all sktometometo/lavis-grpc-server
 
 ```bash
 rosdep install --from-paths . --ignore-src -y -r
-catkin build LAVIS_grpc_server
+catkin build foundation_model_grpc_server
 ```
 
 ### How to use demo
@@ -57,5 +57,5 @@ catkin build LAVIS_grpc_server
 After launch a server.
 
 ```bash
-roslaunch LAVIS_grpc_server demo.launch
+roslaunch foundation_model_grpc_server demo.launch
 ```

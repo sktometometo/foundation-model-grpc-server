@@ -6,11 +6,13 @@ import cv2
 import grpc
 from lavis.models import load_model_and_preprocess
 
-from LAVIS_grpc_core.server import LAVISServer
-from LAVIS_grpc_interface import lavis_server_pb2, lavis_server_pb2_grpc
-from LAVIS_grpc_interface.lavis_server_pb2_grpc import \
+from foundation_model_grpc_core.server import LAVISServer
+from foundation_model_grpc_interface import (lavis_server_pb2,
+                                             lavis_server_pb2_grpc)
+from foundation_model_grpc_interface.lavis_server_pb2_grpc import \
     add_LAVISServerServicer_to_server
-from LAVIS_grpc_utils import cv_array_to_image_proto, image_proto_to_cv_array
+from foundation_model_grpc_utils import (cv_array_to_image_proto,
+                                         image_proto_to_cv_array)
 
 model_list = {
     'blip2_opt2.7b': {
