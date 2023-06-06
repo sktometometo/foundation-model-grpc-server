@@ -2,7 +2,8 @@
     <arg name="host" default="localhost"/>
     <arg name="port" default="50051"/>
 
-    <node pkg="LAVIS_grpc_server" type="rosbridge_server.py" name="LAVIS_grpc_bridge_server"
+    <node pkg="foundation_model_grpc_server" type="rosbridge_server.py"
+        name="foundation_model_grpc_bridge_server"
         output="screen">
         <rosparam subst_value="true">
             grpc_hostname: $(arg host)

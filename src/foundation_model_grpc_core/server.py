@@ -13,11 +13,13 @@ from lavis.models import load_model_and_preprocess
 from lavis.models.blip_models.blip_image_text_matching import compute_gradcam
 from PIL import Image
 
-from LAVIS_grpc_interface.lavis_server_pb2 import (
+from foundation_model_grpc_interface.lavis_server_pb2 import (
     ImageCaptioningResponse, InstructedGenerationResponse,
     TextLocalizationResponse, VisualQuestionAnsweringResponse)
-from LAVIS_grpc_interface.lavis_server_pb2_grpc import LAVISServerServicer
-from LAVIS_grpc_utils import cv_array_to_image_proto, image_proto_to_cv_array
+from foundation_model_grpc_interface.lavis_server_pb2_grpc import \
+    LAVISServerServicer
+from foundation_model_grpc_utils import (cv_array_to_image_proto,
+                                         image_proto_to_cv_array)
 
 logger = logging.getLogger(__name__)
 

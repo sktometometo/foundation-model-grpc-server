@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-from LAVIS_grpc_interface import lavis_server_pb2
+from foundation_model_grpc_interface import lavis_server_pb2
 
 
 def image_proto_to_cv_array(image: lavis_server_pb2.Image) -> np.ndarray:
