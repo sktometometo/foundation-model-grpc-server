@@ -14,13 +14,16 @@ def get_requirements():
                                    if ros_enabled else '/requirements.txt')
   install_requires = []
   if os.path.isfile(requirement_path):
-    with open(requirement_path) as f:
+    with open(requirement_path, encoding='utf-8') as f:
       install_requires = f.read().splitlines()
   return install_requires
 
 
 package_info = {
-    "packages": ['LAVIS_grpc_core', 'LAVIS_grpc_interface', 'LAVIS_grpc_utils'],
+    "packages": [
+        'foundation_model_grpc_core', 'foundation_model_grpc_interface',
+        'foundation_model_grpc_utils'
+    ],
     "package_dir": {
         '': 'src'
     },
@@ -28,12 +31,12 @@ package_info = {
         get_requirements(),
     "entry_points": {
         'console_scripts': [
-            "download_model_cache = LAVIS_grpc_core:download_model_cache",
+            "download_model_cache = foundation_model_grpc_core:download_model_cache",
         ],
         'gui_scripts': [
-            "run_lavis_server = LAVIS_grpc_core:main_server",
-            "sample_lavis_client = LAVIS_grpc_core:main_client_sample",
-            "sample_continuous_captioning = LAVIS_grpc_core.continuous_captioning:main"
+            "run_lavis_server = foundation_model_grpc_core:main_server",
+            "sample_lavis_client = foundation_model_grpc_core:main_client_sample",
+            "sample_continuous_captioning = foundation_model_grpc_core.continuous_captioning:main"
         ]
     },
     "classifiers": [
@@ -48,7 +51,7 @@ if ros_enabled:
 else:
   d = package_info
   d.update({
-      'name': 'LAVIS_grpc_server',
+      'name': 'foundation_model_grpc_server',
       'version': '0.0.1',
   })
 
