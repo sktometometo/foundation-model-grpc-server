@@ -83,10 +83,13 @@ class LLaMAAdapterServer(LAVISServerServicer):
     image = self.preprocess(raw_image).unsqueeze(0).to(self.device)
     # Input question
     prompt = llama.format_prompt('Describe the image in detail.')
+    logger.info(f'Get request image (shape {image.shape})')
+    logger.info(f'prompt: {prompt}')
     # Generate inference
-    result = self.model.generate(image, prompt)
+    result = self.model.generate(image, [prompt])
     raw_caption = result[0]
     caption = self.translate_output_text(raw_caption)
+    logger.info(f'Got answer "{raw_caption}" (translated to "{caption}")')
     if self.log_directory is not None:
       current_datetime = datetime.datetime.now().isoformat()
       self.save_data(
@@ -116,14 +119,13 @@ class LLaMAAdapterServer(LAVISServerServicer):
     question = self.translate_input_text(raw_question)
     prompt = llama.format_prompt(question)
     # logging
-    logger.info(f'Get request with question "{raw_question}" (translated to "{question}")')
-    logger.info(f'image: {image}')
+    logger.info(f'Get request image (shape {image.shape}) with question "{raw_question}" (translated to "{question}")')
     logger.info(f'prompt: {prompt}')
     # Generate inference
-    result = self.model.generate(image, prompt)
+    result = self.model.generate(image, [prompt])
     raw_answer = result[0]
     answer = self.translate_output_text(raw_answer)
-    logger.info('Got answer "{raw_answer}" (translated to "{answer}")')
+    logger.info(f'Got answer "{raw_answer}" (translated to "{answer}")')
     if self.log_directory is not None:
       current_datetime = datetime.datetime.now().isoformat()
       self.save_data(
