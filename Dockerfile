@@ -5,6 +5,7 @@ RUN apt-get update \
     && apt-get install -q -y \
     libgl1-mesa-dev \
     libglib2.0-0 \
+    git \
     && rm -rf /var/lib/apt/lists/*
 COPY . /workspace/foundation-model-grpc-server
 RUN git clone https://github.com/sktometometo/LLaMA-Adapter.git LLama -b v2_pacakged
