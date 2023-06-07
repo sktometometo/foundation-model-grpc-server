@@ -1,9 +1,12 @@
+import argparse
 import datetime
 import logging
 import os
+from concurrent import futures
 
 import cv2
 import deep_translator
+import grpc
 import numpy as np
 import torch
 import yaml
@@ -13,15 +16,38 @@ from lavis.models import load_model_and_preprocess
 from lavis.models.blip_models.blip_image_text_matching import compute_gradcam
 from PIL import Image
 
+from foundation_model_grpc_core.lavis_server import LAVISServer
+from foundation_model_grpc_interface import (lavis_server_pb2,
+                                             lavis_server_pb2_grpc)
 from foundation_model_grpc_interface.lavis_server_pb2 import (
     ImageCaptioningResponse, InstructedGenerationResponse,
     TextLocalizationResponse, VisualQuestionAnsweringResponse)
-from foundation_model_grpc_interface.lavis_server_pb2_grpc import \
-    LAVISServerServicer
+from foundation_model_grpc_interface.lavis_server_pb2_grpc import (
+    LAVISServerServicer, add_LAVISServerServicer_to_server)
 from foundation_model_grpc_utils import (cv_array_to_image_proto,
                                          image_proto_to_cv_array)
 
 logger = logging.getLogger(__name__)
+
+
+model_list = {
+    'blip2_opt2.7b': {
+        'model_name': 'blip2_opt',
+        'model_type': 'pretrain_opt2.7b'
+    },
+    'blip2_flant5xl': {
+        'model_name': 'blip2_t5',
+        'model_type': 'pretrain_flant5xl'
+    },
+    'blip_text_localization': {
+        'model_name': 'blip_image_text_matching',
+        'model_type': 'large'
+    },
+    'blip_vqa': {
+        'model_name': 'blip_vqa',
+        'model_type': 'vqav2'
+    }
+}
 
 
 class LAVISServer(LAVISServerServicer):
@@ -256,3 +282,87 @@ class LAVISServer(LAVISServerServicer):
       cv2.imshow("LAVISServer Visual Question Answering", cv_array_bgr)
       cv2.waitKey(1)
     return response
+
+
+def download_model_cache():
+  logging.basicConfig(level=logging.INFO)
+  for key, value in model_list.items():
+    name = value['model_name']
+    model_type = value['model_type']
+    load_model_and_preprocess(name=name,
+                              model_type=model_type,
+                              is_eval=True,
+                              device='cpu')
+
+
+def main_server():
+  parser = argparse.ArgumentParser(description='LAVIS Server.')
+  parser.add_argument('--port',
+                      default=50051,
+                      type=int,
+                      help='Port for Grpc server')
+  parser.add_argument('--use-gui',
+                      action='store_true',
+                      help='Show GUI Windows if set')
+  parser.add_argument('--log-directory',
+                      default=None,
+                      help='Directory for log saving')
+  parser.add_argument('--use-translator',
+                      action='store_true',
+                      help='If set, translator runs internally.')
+  parser.add_argument('--device-image-captioning', default=None, type=int)
+  parser.add_argument('--model-image-captioning', default=None, type=str)
+  parser.add_argument('--device-instructed-generation', default=None, type=int)
+  parser.add_argument('--model-instructed-generation', default=None, type=str)
+  parser.add_argument('--device-text-localization', default=None, type=int)
+  parser.add_argument('--model-text-localization', default=None, type=str)
+  parser.add_argument('--device-visual-question-answering',
+                      default=None,
+                      type=int)
+  parser.add_argument('--model-visual-question-answering',
+                      default=None,
+                      type=str)
+  args = parser.parse_args()
+  logging.basicConfig(level=logging.INFO)
+
+  model_device_dict = {}
+  if args.device_image_captioning is not None and args.model_image_captioning is not None:
+    model_device_dict['image_captioning'] = {
+        'device': 'cuda:{}'.format(args.device_image_captioning),
+        'model_name': model_list[args.model_image_captioning]['model_name'],
+        'model_type': model_list[args.model_image_captioning]['model_type']
+    }
+  if args.device_instructed_generation is not None and args.model_instructed_generation is not None:
+    model_device_dict['instructed_generation'] = {
+        'device':
+            'cuda:{}'.format(args.device_instructed_generation),
+        'model_name':
+            model_list[args.model_instructed_generation]['model_name'],
+        'model_type':
+            model_list[args.model_instructed_generation]['model_type']
+    }
+  if args.device_text_localization is not None and args.model_text_localization is not None:
+    model_device_dict['text_localization'] = {
+        'device': 'cuda:{}'.format(args.device_text_localization),
+        'model_name': model_list[args.model_text_localization]['model_name'],
+        'model_type': model_list[args.model_text_localization]['model_type']
+    }
+  if args.device_visual_question_answering is not None and args.model_visual_question_answering is not None:
+    model_device_dict['visual_question_answering'] = {
+        'device':
+            'cuda:{}'.format(args.device_visual_question_answering),
+        'model_name':
+            model_list[args.model_visual_question_answering]['model_name'],
+        'model_type':
+            model_list[args.model_visual_question_answering]['model_type']
+    }
+
+  server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
+  add_LAVISServerServicer_to_server(
+      LAVISServer(use_gui=args.use_gui,
+                  log_directory=args.log_directory,
+                  model_device_dict=model_device_dict,
+                  use_translator=args.use_translator), server)
+  server.add_insecure_port('[::]:{}'.format(args.port))
+  server.start()
+  server.wait_for_termination()

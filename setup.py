@@ -31,10 +31,10 @@ package_info = {
         get_requirements(),
     "entry_points": {
         'console_scripts': [
-            "download_model_cache = foundation_model_grpc_core:download_model_cache",
+            "download_model_cache = foundation_model_grpc_core.lavis_server:download_model_cache",
         ],
         'gui_scripts': [
-            "run_lavis_server = foundation_model_grpc_core:main_server",
+            "run_lavis_server = foundation_model_grpc_core.lavis_server:main_server",
             "sample_lavis_client = foundation_model_grpc_core:main_client_sample",
             "sample_continuous_captioning = foundation_model_grpc_core.continuous_captioning:main"
         ]
