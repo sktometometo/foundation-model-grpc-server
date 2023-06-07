@@ -10,6 +10,8 @@ import llama
 import numpy as np
 import yaml
 from deep_translator import GoogleTranslator
+from llama.llama_adapter import _MODELS
+from llama.utils import _download
 from PIL import Image
 
 from foundation_model_grpc_interface.lavis_server_pb2 import (
@@ -27,7 +29,8 @@ class LLaMAAdapterServer(LAVISServerServicer):
                llama_dir,
                log_directory=None,
                use_translator=False,
-               target_language='ja'):
+               target_language='ja',
+               checkpoint_cache='$HOME/.cache/llama_adapter_pretrained/'):
     self.log_directory = log_directory
     self.use_translator = use_translator
     self.input_translator = GoogleTranslator(source='auto', target='en')
@@ -35,7 +38,8 @@ class LLaMAAdapterServer(LAVISServerServicer):
                                               target=target_language)
 
     self.device = 'cuda'
-    self.model, self.preprocess = llama.load('BIAS-7B', llama_dir, self.device)
+    os.makedirs(os.path.expandvars(checkpoint_cache), exist_ok=True)
+    self.model, self.preprocess = llama.load('BIAS-7B', llama_dir, self.device, download_root=os.path.expandvars(checkpoint_cache))
 
     logger.info('Initialized')
 
@@ -135,6 +139,9 @@ class LLaMAAdapterServer(LAVISServerServicer):
     response = VisualQuestionAnsweringResponse(answer=answer)
     return response
 
+def download_model(name='', checkpoint_cache='$HOME/.cache/llama_adapter_pretrained/'):
+  os.makedirs(os.path.expandvars('$HOME/.cache/llama_adapter_pretrained/'), exist_ok=True)
+  _download(_MODELS[name], checkpoint_cache)
 
 def run_server():
   parser = argparse.ArgumentParser(description='LLaMA Adapter Server.')
@@ -151,7 +158,6 @@ def run_server():
                       help='If set, translator runs internally.')
   args = parser.parse_args()
   logging.basicConfig(level=logging.INFO)
-
   
   server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
   add_LAVISServerServicer_to_server(

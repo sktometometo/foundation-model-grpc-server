@@ -31,7 +31,8 @@ package_info = {
         get_requirements(),
     "entry_points": {
         'console_scripts': [
-            "download_model_cache = foundation_model_grpc_core.lavis_server:download_model_cache",
+            "download_lavis_model = foundation_model_grpc_core.lavis_server:download_model",
+            "download_llama_adapter_server_model = foundation_model_grpc_core.llama_adapter_server:download_model",
             "run_llama_adapter_server = foundation_model_grpc_core.llama_adapter_server:run_server",
         ],
         'gui_scripts': [

@@ -284,7 +284,7 @@ class LAVISServer(LAVISServerServicer):
     return response
 
 
-def download_model_cache():
+def download_model():
   logging.basicConfig(level=logging.INFO)
   for key, value in model_list.items():
     name = value['model_name']
