@@ -139,9 +139,10 @@ class LLaMAAdapterServer(LAVISServerServicer):
     response = VisualQuestionAnsweringResponse(answer=answer)
     return response
 
-def download_model(name='', checkpoint_cache='$HOME/.cache/llama_adapter_pretrained/'):
-  os.makedirs(os.path.expandvars('$HOME/.cache/llama_adapter_pretrained/'), exist_ok=True)
-  _download(_MODELS[name], checkpoint_cache)
+def download_model(name='BIAS-7B', checkpoint_cache='$HOME/.cache/llama_adapter_pretrained/'):
+  directory = os.path.expandvars('$HOME/.cache/llama_adapter_pretrained/')
+  os.makedirs(directory, exist_ok=True)
+  _download(_MODELS[name], directory)
 
 def run_server():
   parser = argparse.ArgumentParser(description='LLaMA Adapter Server.')
