@@ -8,7 +8,7 @@ RUN apt-get update \
     git \
     && rm -rf /var/lib/apt/lists/*
 COPY . /workspace/foundation-model-grpc-server
-RUN git clone https://github.com/sktometometo/LLaMA-Adapter.git LLama -b v2_pacakged
+RUN git clone https://github.com/sktometometo/LLaMA-Adapter.git LLaMA-Adapter -b v2_pacakged
 RUN pip install --no-cache-dir /workspace/LLaMA-Adapter/requirements.txt
 RUN pip install --no-cache-dir /workspace/LLaMA-Adapter/llama_adapter_v2_multimodal/requirements.txt
 RUN pip install --no-cache-dir -e /workspace/LLaMA-Adapter/llama_adapter_v2_multimodal/
