@@ -16,9 +16,6 @@ from lavis.models import load_model_and_preprocess
 from lavis.models.blip_models.blip_image_text_matching import compute_gradcam
 from PIL import Image
 
-from foundation_model_grpc_core.lavis_server import LAVISServer
-from foundation_model_grpc_interface import (lavis_server_pb2,
-                                             lavis_server_pb2_grpc)
 from foundation_model_grpc_interface.lavis_server_pb2 import (
     ImageCaptioningResponse, InstructedGenerationResponse,
     TextLocalizationResponse, VisualQuestionAnsweringResponse)
