@@ -115,10 +115,15 @@ class LLaMAAdapterServer(LAVISServerServicer):
     raw_question = request.question
     question = self.translate_input_text(raw_question)
     prompt = llama.format_prompt(question)
+    # logging
+    logger.info(f'Get request with question "{raw_question}" (translated to "{question}")')
+    logger.info(f'image: {image}')
+    logger.info(f'prompt: {prompt}')
     # Generate inference
     result = self.model.generate(image, prompt)
     raw_answer = result[0]
     answer = self.translate_output_text(raw_answer)
+    logger.info('Got answer "{raw_answer}" (translated to "{answer}")')
     if self.log_directory is not None:
       current_datetime = datetime.datetime.now().isoformat()
       self.save_data(
