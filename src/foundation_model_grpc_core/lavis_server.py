@@ -91,30 +91,41 @@ class LAVISServer(LAVISServerServicer):
         yaml.dump(data, f, encoding='utf-8', allow_unicode=True)
 
   def ImageCaptioning(self, request, context):
+    # Retrieve models
     model = self.models['image_captioning']['model']
     device = self.models['image_captioning']['device']
     vis_processors = self.models['image_captioning']['vis_processors']
     text_processors = self.models['image_captioning']['text_processors']
+    # Image
     cv_array_rgb = image_proto_to_cv_array(request.image)
     cv_array_bgr = cv2.cvtColor(image_proto_to_cv_array(request.image),
                                 cv2.COLOR_RGB2BGR)
     raw_image = Image.fromarray(cv_array_rgb)
     image = vis_processors["eval"](raw_image).unsqueeze(0).to(device)
+    # Generate result
     result = model.generate({"image": image})
+    raw_caption = result[0]
+    caption = self.translate_output_text(raw_caption)
+    #
     response = ImageCaptioningResponse(
-        caption=self.translate_output_text(result[0]))
+        caption=caption)
     logger.info("Got image shape: {}".format(
         image_proto_to_cv_array(request.image).shape))
-    logger.info("Generate caption: {}".format(response))
+    logger.info("Generate caption: {} translated to {}".format(raw_caption, caption))
     if self.log_directory is not None:
       current_datetime = datetime.datetime.now().isoformat()
       self.save_data(
           self.log_directory +
-          '/{}_image_captioning.png'.format(current_datetime), cv_array_bgr)
+          '/{}_image_captioning_input.png'.format(current_datetime), cv_array_bgr)
+      cv2.putText(cv_array_bgr, f'caption: {raw_caption}', (0, 0), cv2.FONT_HERSHEY_PLAIN, 2, (255, 255, 255), 1, cv2.LINE_AA)
+      self.save_data(
+          self.log_directory + '/{}_image_captioning.png'.format(current_datetime),
+          cv_array_bgr)
       self.save_data(
           self.log_directory +
-          '/{}_image_captioning.yaml'.format(current_datetime),
-          {'caption': '{}'.format(response)})
+          '/{}_image_captioning_input.yaml'.format(current_datetime),
+          {'caption': caption,
+           'raw_caption': raw_caption})
     if self.use_gui:
       cv2.imshow("LAVISBLIP2Server Image Captioning", cv_array_bgr)
       cv2.waitKey(1)
@@ -197,35 +208,49 @@ class LAVISServer(LAVISServerServicer):
     return response
 
   def VisualQuestionAnswering(self, request, context):
+    # Retrieve models
     model = self.models['visual_question_answering']['model']
     device = self.models['visual_question_answering']['device']
     vis_processors = self.models['visual_question_answering']['vis_processors']
     text_processors = self.models['visual_question_answering'][
         'text_processors']
+    # Input image
     cv_array_rgb = image_proto_to_cv_array(request.image)
     cv_array_bgr = cv2.cvtColor(image_proto_to_cv_array(request.image),
                                 cv2.COLOR_RGB2BGR)
     raw_image = Image.fromarray(cv_array_rgb)
     image = vis_processors["eval"](raw_image).unsqueeze(0).to(device)
+    # Input question
+    raw_question = request.question
+    question = self.translate_input_text(raw_question)
+    # Generate result
     result = model.predict_answers(samples={
         "image": image,
-        "text_input": self.translate_input_text(request.question)
+        "text_input": question
     },
                                    inference_method='generate')
+    raw_answer = result[0]
+    answer = self.translate_output_text(raw_answer) 
     response = VisualQuestionAnsweringResponse(
-        answer=self.translate_output_text(result[0]))
-    logger.info("Get image with {} size with prompt {}".format(
-        image_proto_to_cv_array(request.image).shape, request.question))
-    logger.info("answer: {}".format(result[0]))
+        answer=self.translate_output_text(answer))
+    logger.info("Get image with {} size with question {} (translated to {})".format(
+        image_proto_to_cv_array(request.image).shape, raw_question, question))
+    logger.info("answer: {} translated to {}".format(raw_answer, answer))
     if self.log_directory is not None:
       current_datetime = datetime.datetime.now().isoformat()
+      self.save_data(
+          self.log_directory + '/{}_vqa_input.png'.format(current_datetime),
+          cv_array_bgr)
+      cv2.putText(cv_array_bgr, f'question: {question}\nanswer: {raw_answer}', (0, 0), cv2.FONT_HERSHEY_PLAIN, 2, (255, 255, 255), 1, cv2.LINE_AA)
       self.save_data(
           self.log_directory + '/{}_vqa.png'.format(current_datetime),
           cv_array_bgr)
       self.save_data(
-          self.log_directory + '/{}_vqa.yaml'.format(current_datetime), {
-              'question': request.question,
-              'answer': result[0]
+          self.log_directory + '/{}_vqa_input.yaml'.format(current_datetime), {
+              'raw_question': raw_question,
+              'question': question,
+              'raw_answer': raw_answer,
+              'answer': answer,
           })
     if self.use_gui:
       cv2.imshow("LAVISServer Visual Question Answering", cv_array_bgr)
