@@ -93,14 +93,17 @@ class LLaMAAdapterServer(LAVISServerServicer):
     if self.log_directory is not None:
       current_datetime = datetime.datetime.now().isoformat()
       self.save_data(
-          self.log_directory + '/{}_image_captioning_input.png'.format(current_datetime),
+        os.path.join(
+          self.log_directory, '{}_image_captioning_input.png'.format(current_datetime)),
           cv_array_bgr)
       cv2.putText(cv_array_bgr, f'caption: {raw_caption}', (0, 0), cv2.FONT_HERSHEY_PLAIN, 2, (255, 255, 255), 1, cv2.LINE_AA)
       self.save_data(
-          self.log_directory + '/{}_image_captioning.png'.format(current_datetime),
+        os.path.join(
+          self.log_directory, '{}_image_captioning.png'.format(current_datetime)),
           cv_array_bgr)
       self.save_data(
-          self.log_directory + '/{}_image_captioning_input.yaml'.format(current_datetime), {
+        os.path.join(
+          self.log_directory, '{}_image_captioning_input.yaml'.format(current_datetime)), {
               'raw_caption': raw_caption,
               'caption': caption,
           })
@@ -129,14 +132,17 @@ class LLaMAAdapterServer(LAVISServerServicer):
     if self.log_directory is not None:
       current_datetime = datetime.datetime.now().isoformat()
       self.save_data(
-          self.log_directory + '/{}_vqa_input.png'.format(current_datetime),
+        os.path.join(
+          self.log_directory, '{}_vqa_input.png'.format(current_datetime)),
           cv_array_bgr)
       cv2.putText(cv_array_bgr, f'question: {question}\nanswer: {raw_answer}', (0, 0), cv2.FONT_HERSHEY_PLAIN, 2, (255, 255, 255), 1, cv2.LINE_AA)
       self.save_data(
-          self.log_directory + '/{}_vqa.png'.format(current_datetime),
+        os.path.join(
+          self.log_directory, '{}_vqa.png'.format(current_datetime)),
           cv_array_bgr)
       self.save_data(
-          self.log_directory + '/{}_vqa_input.yaml'.format(current_datetime), {
+        os.path.join(
+          self.log_directory, '{}_vqa_input.yaml'.format(current_datetime)), {
               'raw_question': raw_question,
               'question': question,
               'prompt': prompt,
