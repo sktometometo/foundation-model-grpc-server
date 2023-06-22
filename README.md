@@ -1,6 +1,7 @@
 # foundation-model-grpc-server
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Python Linting Check](https://github.com/sktometometo/foundation-model-grpc-server/actions/workflows/python_linting.yml/badge.svg)](https://github.com/sktometometo/foundation-model-grpc-server/actions/workflows/python_linting.yml)
 
 This is a python package provides grpc server for foundation model.
 Currently models below are supported.
