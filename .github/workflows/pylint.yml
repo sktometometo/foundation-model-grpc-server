@@ -28,7 +28,7 @@ jobs:
         make
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py') --ignore=src/foundation_model_grpc_interface/ --max-line-length=999
+        pylint $(git ls-files '*.py') --indent-string='    ' --generated-members=cv2.* --ignore=src/foundation_model_grpc_interface/ --max-line-length=999
   formatting:
     runs-on: ubuntu-latest
     strategy:

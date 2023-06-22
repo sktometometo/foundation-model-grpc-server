@@ -1,3 +1,4 @@
+-e git+https://github.com/salaniz/pycocoevalcap.git
 grpcio-tools
 salesforce-lavis
 opencv-python
