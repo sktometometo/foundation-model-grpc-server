@@ -1,11 +1,14 @@
 <package format="2">
     <name>foundation_model_grpc_server</name>
-    <version>0.0.1</version>
+    <version>0.1.0</version>
     <description>
-        This package provides foo capability.
+        This is a package provides grpc server for foundation model.
+        Currently LAVIS and LLaMA-Adapter are supported.
     </description>
+    <author email="sktometometo@gmail.com">Koki Shinjo</author>
     <maintainer email="sktometometo@gmail.com">Koki Shinjo</maintainer>
     <license>MIT</license>
+    <url>https://github.com/sktometometo/foundation-model-grpc-server</url>
 
     <buildtool_depend>catkin</buildtool_depend>
 

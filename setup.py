@@ -44,8 +44,11 @@ package_info = {
     },
     "classifiers": [
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
+        "Operating System :: POSIX :: Linux",
     ],
 }
 
@@ -56,7 +59,11 @@ else:
     d.update(
         {
             "name": "foundation_model_grpc_server",
-            "version": "0.0.1",
+            "description": "This is a package provides grpc server for foundation model.",
+            "author": "Koki Shinjo",
+            "author_email": "sktometometo@gmail.com",
+            "url": "https://github.com/sktometometo/foundation-model-grpc-server",
+            "version": "0.1.0",
         }
     )
 
