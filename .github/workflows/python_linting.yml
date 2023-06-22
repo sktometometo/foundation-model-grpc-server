@@ -30,7 +30,7 @@ jobs:
       run: |
         pylint $(git ls-files '*.py') \
         --indent-string='    ' \
-        --generated-members=cv2.* \
-        --ignored-modules=rospy,foundation_model_grpc_server.srv,llama,foundation_model_grpc_interface \
+        --generated-members=cv2.*,torch.* \
+        --ignored-modules=rospy,foundation_model_grpc_server.srv,llama,foundation_model_grpc_interface.lavis_server_pb2 \
         --ignore=src/foundation_model_grpc_interface/ \
         --max-line-length=999
