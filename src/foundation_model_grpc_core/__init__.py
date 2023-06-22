@@ -1,3 +1,5 @@
+"""TODO"""
+
 import argparse
 import logging
 
@@ -8,6 +10,7 @@ from foundation_model_grpc_utils import cv_array_to_image_proto, image_proto_to_
 
 
 def main_client_sample():
+    """GRPC Client function"""
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--server-address", default="localhost", type=str, help="Address for grpc server"
@@ -35,7 +38,7 @@ def main_client_sample():
     with grpc.insecure_channel("{}:{}".format(args.server_address, args.port)) as channel:
         stub = lavis_server_pb2_grpc.LAVISServerStub(channel)
         while True:
-            ret, frame = cam.read()
+            _, frame = cam.read()
             if args.use_gui:
                 cv2.imshow("LAVISClient", frame)
                 if cv2.waitKey(1) != -1:
