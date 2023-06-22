@@ -1,5 +1,9 @@
 import os
-from distutils.core import setup
+
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 
 try:
     from catkin_pkg.python_setup import generate_distutils_setup
