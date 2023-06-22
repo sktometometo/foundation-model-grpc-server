@@ -1,9 +1,12 @@
 # foundation-model-grpc-server
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 This is a python package provides grpc server for foundation model.
 Currently models below are supported.
 
 - [LAVIS](https://github.com/salesforce/LAVIS).
+- [LLaMA-Adapter](https://github.com/OpenGVLab/LLaMA-Adapter).
 
 ## Bare python module
 
