@@ -33,7 +33,10 @@ logger = logging.getLogger(__name__)
 model_list = {
     "blip2_opt2.7b": {"model_name": "blip2_opt", "model_type": "pretrain_opt2.7b"},
     "blip2_flant5xl": {"model_name": "blip2_t5", "model_type": "pretrain_flant5xl"},
-    "blip_text_localization": {"model_name": "blip_image_text_matching", "model_type": "large"},
+    "blip_text_localization": {
+        "model_name": "blip_image_text_matching",
+        "model_type": "large",
+    },  # noqa: E501
     "blip_vqa": {"model_name": "blip_vqa", "model_type": "vqav2"},
 }
 
@@ -43,7 +46,7 @@ class LAVISServer(LAVISServerServicer):
         self,
         use_gui: bool,
         log_directory=None,
-        model_device_dict={},
+        model_device_dict=None,
         use_translator=False,
         target_language="ja",
     ):
@@ -54,6 +57,8 @@ class LAVISServer(LAVISServerServicer):
         self.output_translator = GoogleTranslator(source="auto", target=target_language)
 
         self.models = {}
+        if model_device_dict is None:
+            model_device_dict = {}
         for task_name, model_and_device in model_device_dict.items():
             device = torch.device(model_and_device["device"])
             model_name = model_and_device["model_name"]
@@ -73,10 +78,10 @@ class LAVISServer(LAVISServerServicer):
     def translate_input_text(self, text):
         if self.use_translator:
             try:
-                logger.info("original input text: {}".format(text))
+                logger.info("original input text: %s", text)
                 return self.input_translator.translate(text)
             except deep_translator.exceptions.NotValidPayload as error:
-                logger.error("Error: {}".format(error))
+                logger.error("Error: %s", error)
                 return text
         else:
             return text
@@ -84,10 +89,10 @@ class LAVISServer(LAVISServerServicer):
     def translate_output_text(self, text):
         if self.use_translator:
             try:
-                logger.info("original output text: {}".format(text))
+                logger.info("original output text: %s", text)
                 return self.output_translator.translate(text)
             except deep_translator.exceptions.NotValidPayload as error:
-                logger.error("Error: {}".format(error))
+                logger.error("Error: %s", error)
                 return text
         else:
             return text
@@ -110,7 +115,6 @@ class LAVISServer(LAVISServerServicer):
         model = self.models["image_captioning"]["model"]
         device = self.models["image_captioning"]["device"]
         vis_processors = self.models["image_captioning"]["vis_processors"]
-        text_processors = self.models["image_captioning"]["text_processors"]
         # Image
         cv_array_rgb = image_proto_to_cv_array(request.image)
         cv_array_bgr = cv2.cvtColor(image_proto_to_cv_array(request.image), cv2.COLOR_RGB2BGR)
@@ -122,8 +126,8 @@ class LAVISServer(LAVISServerServicer):
         caption = self.translate_output_text(raw_caption)
         #
         response = ImageCaptioningResponse(caption=caption)
-        logger.info("Got image shape: {}".format(image_proto_to_cv_array(request.image).shape))
-        logger.info("Generate caption: {} translated to {}".format(raw_caption, caption))
+        logger.info("Got image shape: %s", image_proto_to_cv_array(request.image).shape)
+        logger.info("Generate caption: %s translated to %s", raw_caption, caption)
         if self.log_directory is not None:
             current_datetime = datetime.datetime.now().isoformat()
             self.save_data(
@@ -157,7 +161,6 @@ class LAVISServer(LAVISServerServicer):
         model = self.models["instructed_generation"]["model"]
         device = self.models["instructed_generation"]["device"]
         vis_processors = self.models["instructed_generation"]["vis_processors"]
-        text_processors = self.models["instructed_generation"]["text_processors"]
         cv_array_rgb = image_proto_to_cv_array(request.image)
         cv_array_bgr = cv2.cvtColor(image_proto_to_cv_array(request.image), cv2.COLOR_RGB2BGR)
         prompt = self.translate_input_text(request.prompt)
@@ -166,11 +169,11 @@ class LAVISServer(LAVISServerServicer):
         result = model.generate({"image": image, "prompt": prompt})
         response = InstructedGenerationResponse(response=self.translate_output_text(result[0]))
         logger.info(
-            "Get image with {} size with prompt {}".format(
-                image_proto_to_cv_array(request.image).shape, prompt
-            )
+            "Get image with %s size with prompt %s",
+            image_proto_to_cv_array(request.image).shape,
+            prompt,
         )
-        logger.info("Generate caption: {}".format(response))
+        logger.info("Generate caption: %s", response)
         if self.log_directory is not None:
             current_datetime = datetime.datetime.now().isoformat()
             self.save_data(
@@ -202,9 +205,9 @@ class LAVISServer(LAVISServerServicer):
         response = TextLocalizationResponse()
         response.heatmap.CopyFrom(cv_array_to_image_proto(np.float32(whole_gradcam)))
         logger.info(
-            "Get image with {} size with prompt {}".format(
-                image_proto_to_cv_array(request.image).shape, request.text
-            )
+            "Get image with %s size with prompt %s",
+            image_proto_to_cv_array(request.image).shape,
+            request.text,
         )
         norm_img = np.float64(raw_image) / 255
         gradcam = np.float64(gradcam[0][1])
@@ -235,7 +238,6 @@ class LAVISServer(LAVISServerServicer):
         model = self.models["visual_question_answering"]["model"]
         device = self.models["visual_question_answering"]["device"]
         vis_processors = self.models["visual_question_answering"]["vis_processors"]
-        text_processors = self.models["visual_question_answering"]["text_processors"]
         # Input image
         cv_array_rgb = image_proto_to_cv_array(request.image)
         cv_array_bgr = cv2.cvtColor(image_proto_to_cv_array(request.image), cv2.COLOR_RGB2BGR)
@@ -252,11 +254,12 @@ class LAVISServer(LAVISServerServicer):
         answer = self.translate_output_text(raw_answer)
         response = VisualQuestionAnsweringResponse(answer=self.translate_output_text(answer))
         logger.info(
-            "Get image with {} size with question {} (translated to {})".format(
-                image_proto_to_cv_array(request.image).shape, raw_question, question
-            )
+            "Get image with %s size with question %s (translated to %s)",
+            image_proto_to_cv_array(request.image).shape,
+            raw_question,
+            question,
         )
-        logger.info("answer: {} translated to {}".format(raw_answer, answer))
+        logger.info("answer: %s translated to %s", raw_answer, answer)
         if self.log_directory is not None:
             current_datetime = datetime.datetime.now().isoformat()
             self.save_data(
@@ -292,7 +295,7 @@ class LAVISServer(LAVISServerServicer):
 
 def download_model():
     logging.basicConfig(level=logging.INFO)
-    for key, value in model_list.items():
+    for _, value in model_list.items():
         name = value["model_name"]
         model_type = value["model_type"]
         load_model_and_preprocess(name=name, model_type=model_type, is_eval=True, device="cpu")

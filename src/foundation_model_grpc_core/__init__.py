@@ -48,26 +48,26 @@ def main_client_sample():
                 request = lavis_server_pb2.ImageCaptioningRequest()
                 request.image.CopyFrom(image)
                 result = stub.ImageCaptioning(request, wait_for_ready=True)
-                logger.info("caption: {}".format(result.caption))
+                logger.info("caption: %s", result.caption)
             elif args.task == "instructed_generation":
                 request = lavis_server_pb2.InstructedGenerationRequest()
                 request.image.CopyFrom(image)
                 request.prompt = args.input_text
                 response = stub.InstructedGeneration(request, wait_for_ready=True)
-                logger.info("response: {}".format(response.response))
+                logger.info("response: %s", response.response)
             elif args.task == "text_localization":
                 request = lavis_server_pb2.TextLocalizationRequest()
                 request.image.CopyFrom(image)
                 request.text = args.input_text
                 result = stub.TextLocalization(request, wait_for_ready=True)
                 attention_map = image_proto_to_cv_array(result.heatmap)
-                logger.info("Attention_map: {}".format(attention_map))
+                logger.info("Attention_map: %s", attention_map)
             elif args.task == "vqa":
                 request = lavis_server_pb2.VisualQuestionAnsweringRequest()
                 request.image.CopyFrom(image)
                 request.question = args.input_text
                 result = stub.VisualQuestionAnswering(request, wait_for_ready=True)
-                logger.info("response: {}".format(result.answer))
+                logger.info("response: %s", result.answer)
             if args.once:
                 break
     cv2.destroyAllWindows()

@@ -20,7 +20,7 @@ class ContinuousProcess:
 
     def loop(self, prompt: str):
         while True:
-            ret, frame = self.cap.read()
+            _, frame = self.cap.read()
             raw_image = Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
             image = self.vis_processors["eval"](raw_image).unsqueeze(0).to(self.device)
             result = self.model.generate({"image": image, "prompt": prompt})

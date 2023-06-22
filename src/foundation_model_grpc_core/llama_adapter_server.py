@@ -52,10 +52,10 @@ class LLaMAAdapterServer(LAVISServerServicer):
     def translate_input_text(self, text):
         if self.use_translator:
             try:
-                logger.info("original input text: {}".format(text))
+                logger.info("original input text: %s", text)
                 return self.input_translator.translate(text)
             except deep_translator.exceptions.NotValidPayload as error:
-                logger.error("Error: {}".format(error))
+                logger.error("Error: %s", error)
                 return text
         else:
             return text
@@ -63,10 +63,10 @@ class LLaMAAdapterServer(LAVISServerServicer):
     def translate_output_text(self, text):
         if self.use_translator:
             try:
-                logger.info("original output text: {}".format(text))
+                logger.info("original output text: %s", text)
                 return self.output_translator.translate(text)
             except deep_translator.exceptions.NotValidPayload as error:
-                logger.error("Error: {}".format(error))
+                logger.error("Error: %s", error)
                 return text
         else:
             return text
@@ -186,7 +186,7 @@ class LLaMAAdapterServer(LAVISServerServicer):
 
 
 def download_model(name="BIAS-7B", checkpoint_cache="$HOME/.cache/llama_adapter_pretrained/"):
-    directory = os.path.expandvars("$HOME/.cache/llama_adapter_pretrained/")
+    directory = os.path.expandvars(checkpoint_cache)
     os.makedirs(directory, exist_ok=True)
     _download(_MODELS[name], directory)
 

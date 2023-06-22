@@ -63,7 +63,7 @@ ignore-patterns=^\.#
 # (useful for modules/projects where namespaces are manipulated during runtime
 # and thus existing member attributes cannot be deduced by static analysis). It
 # supports qualified module names, as well as Unix pattern matching.
-ignored-modules=foundation_model_grpc_server.srv,llama,
+ignored-modules=foundation_model_grpc_server.srv,llama,rospy,foundation_model_grpc_interface,foundation_model_grpc_interface.lavis_server_pb2
 
 # Python code to execute, usually for sys.path manipulation such as
 # pygtk.require().
@@ -429,6 +429,7 @@ disable=raw-checker-failed,
         useless-suppression,
         deprecated-pragma,
         use-symbolic-message-instead,
+        logging-fstring-interpolation,
         R,
         C,
 
