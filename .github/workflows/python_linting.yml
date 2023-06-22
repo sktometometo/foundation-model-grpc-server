@@ -28,4 +28,9 @@ jobs:
         make
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py') --indent-string='    ' --generated-members=cv2.* --ignore=src/foundation_model_grpc_interface/ --max-line-length=999
+        pylint $(git ls-files '*.py') \
+        --indent-string='    ' \
+        --generated-members=cv2.* \
+        --ignored-modules=rospy,foundation_model_grpc_server.srv,llama,foundation_model_grpc_interface \
+        --ignore=src/foundation_model_grpc_interface/ \
+        --max-line-length=999

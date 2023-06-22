@@ -18,6 +18,8 @@ pip install -e .
 
 You may have to install extra packages so that python modules can work.
 
+If you want to use LLaMA-Adapter, please install `llama_adapter_v2_multimodal` package in [this LLaMA-Adapter fork](https://github.com/sktometometo/LLaMA-Adapter).
+
 ### RUN
 
 To run the server

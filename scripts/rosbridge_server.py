@@ -1,12 +1,15 @@
 #!/usr/bin/env python
+"""Bridge script between GRPC server and ROS."""
 
 import logging
 
-import foundation_model_grpc_interface.lavis_server_pb2 as lavis_server_pb2
-import foundation_model_grpc_interface.lavis_server_pb2_grpc as lavis_server_pb2_grpc
 import grpc
 import numpy as np
 import rospy
+from foundation_model_grpc_interface import lavis_server_pb2 as lavis_server_pb2
+from foundation_model_grpc_interface import (
+    lavis_server_pb2_grpc as lavis_server_pb2_grpc,
+)
 from foundation_model_grpc_server.srv import (
     ImageCaptioning,
     ImageCaptioningResponse,
