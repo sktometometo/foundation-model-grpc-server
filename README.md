@@ -1,8 +1,11 @@
 # foundation-model-grpc-server
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Black formatting](https://github.com/sktometometo/foundation-model-grpc-server/actions/workflows/python_black.yml/badge.svg)](https://github.com/sktometometo/foundation-model-grpc-server/actions/workflows/python_black.yml)
 [![Python Linting Check](https://github.com/sktometometo/foundation-model-grpc-server/actions/workflows/python_linting.yml/badge.svg)](https://github.com/sktometometo/foundation-model-grpc-server/actions/workflows/python_linting.yml)
 [![ROS build workflow](https://github.com/sktometometo/foundation-model-grpc-server/actions/workflows/catkin_build.yml/badge.svg)](https://github.com/sktometometo/foundation-model-grpc-server/actions/workflows/catkin_build.yml)
+[![Python package](https://github.com/sktometometo/foundation-model-grpc-server/actions/workflows/python_package.yaml/badge.svg)](https://github.com/sktometometo/foundation-model-grpc-server/actions/workflows/python_package.yaml)
+[![Docker Image Build Workflow](https://github.com/sktometometo/foundation-model-grpc-server/actions/workflows/docker_build.yml/badge.svg)](https://github.com/sktometometo/foundation-model-grpc-server/actions/workflows/docker_build.yml)
 
 This is a python package provides grpc server for foundation model.
 Currently models below are supported.
