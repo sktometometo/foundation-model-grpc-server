@@ -9,7 +9,6 @@ on:
 jobs:
   build_docker_image:
     runs-on: ubuntu-latest
-    continue-on-error: true
     name: build_docker_image
     steps:
       - name: Check out repository code
