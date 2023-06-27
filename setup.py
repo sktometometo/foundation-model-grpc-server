@@ -64,7 +64,7 @@ else:
             "author": "Koki Shinjo",
             "author_email": "sktometometo@gmail.com",
             "url": "https://github.com/sktometometo/foundation-model-grpc-server",
-            "version": "0.1.0",
+            "version": "0.2.0",
         }
     )
 
