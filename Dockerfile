@@ -17,6 +17,6 @@ RUN pip install --no-cache-dir -r /workspace/LLaMA-Adapter/llama_adapter_v2_mult
 RUN pip install --no-cache-dir -e /workspace/LLaMA-Adapter/llama_adapter_v2_multimodal/
 RUN pip install --no-cache-dir -e /workspace/foundation-model-grpc-server/
 RUN cd /workspace/foundation-model-grpc-server && make
-RUN if [[ -z "${SKIP_MODEL_DOWNLOAD}" ]]; then download_lavis_model; download_llama_adapter_server_model; fi
+RUN if [ -z "${SKIP_MODEL_DOWNLOAD}" ]; then download_lavis_model; download_llama_adapter_server_model; fi
 
 CMD ["run_lavis_server"]
