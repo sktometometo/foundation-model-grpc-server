@@ -32,6 +32,7 @@ package_info = {
     "install_requires": get_requirements(),
     "entry_points": {
         "console_scripts": [
+            "dummy_command = foundation_model_grpc_core:dummy_command",
             "download_lavis_model = foundation_model_grpc_core.lavis_server:download_model",
             "download_llama_adapter_server_model = foundation_model_grpc_core.llama_adapter_server:download_model",
             "run_llama_adapter_server = foundation_model_grpc_core.llama_adapter_server:run_server",
