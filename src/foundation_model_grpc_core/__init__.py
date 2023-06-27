@@ -9,6 +9,10 @@ from foundation_model_grpc_interface import lavis_server_pb2, lavis_server_pb2_g
 from foundation_model_grpc_utils import cv_array_to_image_proto, image_proto_to_cv_array
 
 
+def dummy_command():
+    print("Dummy command")
+
+
 def main_client_sample():
     """GRPC Client function"""
     parser = argparse.ArgumentParser()
